@@ -1,0 +1,7 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_DB=whlserver
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=fangaofeng

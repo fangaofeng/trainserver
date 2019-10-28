@@ -1,0 +1,20 @@
+{
+  "python.venvPath": "E:\\pythonenv",
+  "python.venvFolders": ["whlrest-PFVxFgBL"],
+  "python.pythonPath": "E:\\pythonvenv\\whlrest-PFVxFgBL\\Scripts\\python.exe",
+  //"python.pipenvPath": "E:\\pythonvenv\\whlrest-PFVxFgBL\\Scripts\\pipenv.exe",
+  //"python.pipenvPath": "C:\\Python\\Python37\\Scripts\\pipenv.exe",
+  "python.terminal.activateEnvironment": true,
+  "python.autoComplete.addBrackets": false,
+  "python.linting.flake8Enabled": true,
+  "python.linting.pycodestyleEnabled": false,
+  "python.formatting.provider": "autopep8",
+  "python.formatting.yapfArgs": ["--style", "{based_on_style:pep8}"],
+  "editor.formatOnSave": true,
+  "python.autoComplete.extraPaths": ["f:\\train\\whlrest"],
+  "editor.tabCompletion": "on",
+  //"svn.path": "c:\\Program Files\\TortoiseSVN\\bin",
+  "git.ignoreLimitWarning": true,
+
+  "python.linting.pylintEnabled": true
+}
