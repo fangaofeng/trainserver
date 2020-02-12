@@ -4,10 +4,11 @@ from django.utils import timezone
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 # Create your models here.
-from common.models import CreaterTimeStampedModel
+from common.models import CreaterTimeStampedModel, TimeStampedModel
+from django.contrib.auth import get_user_model
 
 
-class Article(CreaterTimeStampedModel):
+class Article(TimeStampedModel):
     """文章"""
     STATUS_CHOICES = (
         ('d', '草稿'),
@@ -37,8 +38,18 @@ class Article(CreaterTimeStampedModel):
                                processors=[ResizeToFill(400, 300)],
                                format='JPEG',
                                options={'quality': 90})
+    excerpt = models.CharField(max_length=200, blank=True)
+
     # created_time = models.DateTimeField('创建时间', default=timezone.now)
     # last_mod_time = models.DateTimeField('修改时间',  default=timezone.now)
+    User = get_user_model()
+    creater = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="articles",
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return self.title

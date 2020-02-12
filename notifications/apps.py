@@ -9,5 +9,5 @@ class notificationsConfig(AppConfig):
     def ready(self):
         super(notificationsConfig, self).ready()
         # this is for backwards compability
-        import notifications.signals
-        notifications.notify = notifications.signals.notify
+        # import notifications.signals
+        # notifications.notify = notifications.signals.notify

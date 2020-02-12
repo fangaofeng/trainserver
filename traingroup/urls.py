@@ -1,5 +1,5 @@
 from rest_framework import routers
-from .api import TrainGroupViewSet, TrainManagerViewSet, TrainGropMemberModifyViewSet
+from .api import TrainGroupViewSet,  TrainGropMemberModifyViewSet
 from django.urls import path
 router = routers.SimpleRouter(trailing_slash=False)
 router.register(r'group', TrainGroupViewSet)

@@ -5,11 +5,12 @@ from django.contrib.auth import get_user_model
 # Create your models here.
 from django.utils import timezone
 from django.contrib.postgres.fields import JSONField
+from mptt.models import TreeManyToManyField
+from simple_history.models import HistoricalRecords
 
 
 class Coursetype(models.Model):
-    type = models.CharField(_('courseware type'), max_length=50, blank=True)
-    typeid = models.PositiveSmallIntegerField(_('课程类别id，禁止修改'), blank=False, default=0)
+    type = models.CharField(_('courseware type'), unique=True, max_length=50, blank=True)
 
     class Meta:
         verbose_name = _('course type ')
@@ -44,8 +45,8 @@ class Courseware(models.Model):
         choices=COURSEWARE_CATEGORY_CHOICES,
         default='公开课',
     )
-    courseware_type = models.ForeignKey(Coursetype, on_delete=models.SET_NULL, blank=True,
-                                        null=True,)
+    type = models.ForeignKey(Coursetype, to_field="type", on_delete=models.SET_NULL, blank=True,
+                             null=True,)
     intruduce = models.CharField(_('courseware intruduce'), max_length=1000, blank=True)
     applicable_user = models.CharField(_('courseware apply for object'), max_length=100, blank=True)
 
@@ -79,10 +80,18 @@ class Courseware(models.Model):
     )
     User = get_user_model()
 
-    trainmanagers = models.ManyToManyField(
-        User,
-        limit_choices_to={'role': 1},
-        related_name='coursewares'
+    # trainmanagers = models.ManyToManyField(
+    #     User,
+    #     # limit_choices_to={'roles': "培训管理员"},
+    #     related_name='coursewares'
+    # )
+
+    departments = TreeManyToManyField(
+        'orgs.Department',
+        related_name='courses',
+        blank=True,
+        help_text='可以使用课程的部门',
+
     )
 
     creater = models.ForeignKey(
@@ -92,12 +101,13 @@ class Courseware(models.Model):
         blank=True,
         null=True,
     )
-    property = JSONField(default={}, blank=True)
-    config_ini = JSONField(default={}, blank=True)
+    property = JSONField(default=dict, blank=True)
+    config_ini = JSONField(default=dict, blank=True)
     drag_flag = models.BooleanField(_(' drag flag'), default=True)
+    recommend = models.BooleanField(_(' recommend'), default=False)
     create_time = models.DateTimeField(_('create'), default=timezone.now)
     # cover, teacherimg, courseware_file, config_dict
-
+    history = HistoricalRecords()
     class Meta:
 
         verbose_name = _('courseware ')

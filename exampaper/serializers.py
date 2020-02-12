@@ -41,7 +41,7 @@ class ExamPaPerCreateSerializer(OwnerFieldSerializer):
     class Meta:
         model = ExamPaPer
         fields = ['zipfileid', 'created', 'cover', 'creater', 'name', 'exame_no', 'introduce',
-                  'status', 'applicable_user', 'total_score', 'passing_score', 'duration', 'trainmanagers']
+                  'status', 'applicable_user', 'total_score', 'passing_score', 'duration', 'departments']
         read_only_fields = ('created', 'cover', 'creater')
         ordering = ['created']
 
@@ -172,13 +172,13 @@ class ExamPaPerSerializer(OwnerFlexFSerializer):
 
     class Meta:
         model = ExamPaPer
-        fields = ['id', 'created', 'cover', 'creater', 'name', 'exame_no', 'introduce',
+        fields = ['id', 'created', 'cover', 'creater', 'name', 'exame_no', 'introduce', 'departments',
                   'status', 'applicable_user', 'total_score', 'passing_score', 'duration']
         read_only_fields = ('created', 'cover', 'creater')
         ordering = ['created']
 
         expandable_fields = {
-            'trainmanagers': (QuestionExamSerializer, {'source': 'trainmanagers', 'many': True}),
+            # 'departments': (QuestionExamSerializer, {'source': 'departments', 'many': True}),
             'questionsdict': (SerializerMethodField,),
             # 'singlechoices': (QuestionExamSerializer, {'source': 'questions', 'many': True}),
             # 'judgements': (QuestionExamSerializer, {'source': 'questions',  'many': True}),
@@ -198,33 +198,33 @@ class ExamPaPerSerializer(OwnerFlexFSerializer):
         return questionsdict
 
 
-class ExamPaPerMembersSerializer(serializers.ModelSerializer):
+# class ExamPaPerMembersSerializer(serializers.ModelSerializer):
 
-    User = get_user_model()
-    trainmanagers = serializers.PrimaryKeyRelatedField(required=False, many=True, queryset=User.objects.all())
+#     User = get_user_model()
+#     departments = serializers.PrimaryKeyRelatedField(required=False, many=True, queryset=User.objects.all())
 
-    class Meta:
-        model = ExamPaPer
-        fields = ['trainmanagers']
-        ordering = ['created_time']
-        depth = 1
+#     class Meta:
+#         model = ExamPaPer
+#         fields = ['departments']
+#         ordering = ['created_time']
+#         depth = 1
 
-    def update(self, instance, validated_data):
-        raise_errors_on_nested_writes('update', self, validated_data)
-        info = model_meta.get_field_info(instance)
-        for attr, value in validated_data.items():
-            if attr in info.relations and info.relations[attr].to_many:
-                field = getattr(instance, attr)
-                if self.partial:
-                    field.remove(*value)  # 对象不存在时，没有提示
-                else:
-                    field.add(*value)
-            else:
-                setattr(instance, attr, value)
-        if not self.partial:
-            instance.save()
+#     def update(self, instance, validated_data):
+#         raise_errors_on_nested_writes('update', self, validated_data)
+#         info = model_meta.get_field_info(instance)
+#         for attr, value in validated_data.items():
+#             if attr in info.relations and info.relations[attr].to_many:
+#                 field = getattr(instance, attr)
+#                 if self.partial:
+#                     field.remove(*value)  # 对象不存在时，没有提示
+#                 else:
+#                     field.add(*value)
+#             else:
+#                 setattr(instance, attr, value)
+#         if not self.partial:
+#             instance.save()
 
-        return instance
+#         return instance
 
 
 class ZipfileSerializer(serializers.ModelSerializer):

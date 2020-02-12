@@ -5,4 +5,4 @@ from django.utils.translation import gettext_lazy as _
 class UsersAppConfig(AppConfig):
 
     name = "users"
-    verbose_name = _("users")
+    verbose_name = _("user manager")

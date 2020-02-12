@@ -160,8 +160,8 @@ def live_unread_notification_list(request):
             struct['actor'] = str(notification.actor)
         if notification.target:
             struct['target'] = str(notification.target)
-        if notification.action_object:
-            struct['action_object'] = str(notification.action_object)
+        if notification.action:
+            struct['action'] = str(notification.action)
         if notification.data:
             struct['data'] = notification.data
         unread_list.append(struct)
@@ -207,8 +207,8 @@ def live_all_notification_list(request):
             struct['actor'] = str(notification.actor)
         if notification.target:
             struct['target'] = str(notification.target)
-        if notification.action_object:
-            struct['action_object'] = str(notification.action_object)
+        if notification.action:
+            struct['action'] = str(notification.action)
         if notification.data:
             struct['data'] = notification.data
         all_list.append(struct)

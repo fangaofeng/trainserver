@@ -17,7 +17,7 @@ from common.serializers import OwnerFlexFSerializer, OwnerFieldSerializer
 
 class ExamPlanSerializer(OwnerFlexFSerializer):
     status = ChoiceField(required=False, choices=ExamPlan.STATUS_CHOICES)
-    #exampaper_name = serializers.CharField(source='exampaper.name', read_only=True)
+    # exampaper_name = serializers.CharField(source='exampaper.name', read_only=True)
     ratio = serializers.SerializerMethodField()
 
     class Meta:
@@ -30,8 +30,8 @@ class ExamPlanSerializer(OwnerFlexFSerializer):
         expandable_fields = {'exampaper': [ExamPaPerSerializer]}
 
     def get_ratio(self, examplan):
-        num_completed = examplan.plan_progresses.filter(status='completed').count()
-        count = examplan.plan_progresses.count()
+        num_completed = examplan.progresses.filter(status='completed').count()
+        count = examplan.progresses.count()
         return '{}/{}'.format(num_completed, count)
 
     def create(self, validated_data):
@@ -66,8 +66,8 @@ class ExamPlanReadonlySerializer(OwnerFlexFSerializer):
         expandable_fields = {'exampaper': (ExamPaPerSerializer,)}
 
     def get_ratio(self, examplan):
-        num_completed = examplan.plan_progresses.filter(status='completed').count()
-        count = examplan.plan_progresses.count()
+        num_completed = examplan.progresses.filter(status='completed').count()
+        count = examplan.progresses.count()
         return '{}/{}'.format(num_completed, count)
 
 
@@ -96,8 +96,8 @@ class ExamProgressSerializer(OwnerFlexFSerializer):
 
     def get_days_remaining(self, examprogress):
         today = pendulum.today().date()
-        period = pendulum.period(examprogress.plan.end_time.date(), today, absolute=True)
-        return period.days
+        period = pendulum.period(today, examprogress.plan.end_time.date(),  absolute=False)
+        return period.days if period.days > 0 else 0
 
 
 class ExamProgressModifySerializer(OwnerFieldSerializer):

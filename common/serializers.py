@@ -18,7 +18,7 @@ class OwnerFieldSerializer(serializers.ModelSerializer):
     )
 
 
-class PUTPATCHSerializer(serializers.ModelSerializer):
+class ADDDELSerializer(serializers.ModelSerializer):
 
     # PUT add manytomany
     # PATCH delete manytomany

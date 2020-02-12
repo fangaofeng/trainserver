@@ -1,0 +1,291 @@
+{% load i18n static admin_interface_tags %}<!DOCTYPE html>
+
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<head>
+<title>{% block title %}{% endblock %}</title>
+<link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+{% comment %} <link rel="stylesheet" href="{% static 'admin_interface/bootstrap/css/bootstrap.min.css' %}" crossorigin="anonymous"> {% endcomment %}
+
+{% comment %} <link rel="stylesheet" type="text/css" href="{% static "admin_interface/bootstrap/css/bootstrap-grid.min.css" %}"> {% endcomment %}
+
+{% block extrastyle %}{% endblock %}
+{% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}">{% endif %}
+{% block extrahead %}{% endblock %}
+{% block responsive %}
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive.css" %}">
+    {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive_rtl.css" %}">{% endif %}
+
+{% endblock %}
+<link rel="stylesheet" type="text/css" href="{% block stylesheet_1 %}{% static "admin_interface/css/jquery.mCustomScrollbar.min.css" %}{% endblock %}">
+<link rel="stylesheet" type="text/css" href="{% block stylesheet_2 %}{% static "admin_interface/css/sidebar-main.css" %}{% endblock %}">
+<link rel="stylesheet" type="text/css" href="{% block stylesheet_3 %}{% static "admin_interface/css/sidebar-themes.css" %}{% endblock %}">
+{% comment %} <link rel="stylesheet" type="text/css" href="{% block stylesheet_4 %}{% static "admin_interface/css/adminlte.core.css" %}{% endblock %}"> {% endcomment %}
+{# Load CSS and JavaScript #}
+{% comment %} {% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %} {% endcomment %}
+{% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE">{% endblock %}
+</head>
+
+
+<body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}"
+  data-admin-utc-offset="{% now "Z" %}">
+   <div id="root" class="root">
+      <section class="container is-vertical">
+      {% block header %}
+        <header class="header" >
+
+
+
+
+            <nav class="navbar navbar-light navbar-text">
+            {% block branding %}
+              {% get_admin_interface_theme as theme %}
+                <div style="
+                    display: flex;
+                    align-items: center;
+                ">{% if theme.logo_visible %}
+                {% if theme.logo %}
+                <img src="{{ theme.logo_thumbnail.url }}"   height="55"   alt="">
+                {% else %}
+                <img class="d-inline-block align-top" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" width="104" height="36" />
+                {% endif %}{% endif %} {% if theme.title_visible %}<div style="
+                    font-size: 1.4rem;
+                ">
+                {% if theme.title %}{% trans theme.title %}{% else %}{% trans 'Django administration' %}{% endif %}</div>
+                {% endif %}
+                     </div>
+
+
+            {% endblock %}
+                            <!-- Left navbar links -->
+            {% block usertools %}
+            {% if has_permission %}
+              <ul class="navbar-nav">
+              <li class="nav-item">
+                  {% comment %} <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a> {% endcomment %}
+              </li>
+
+              </ul>
+              <ul class="navbar-nav">
+              {% block userlinks %}
+                {% if site_url %}
+                <li class="nav-item d-none d-sm-inline-block">
+                 <a href="{{ site_url }}" class="nav-link">{% trans 'View site' %}</a>
+                </li>
+                {% endif %}
+                {% if user.is_active and user.is_staff %}
+                  {% url 'django-admindocs-docroot' as docsroot %}
+                  {% if docsroot %}
+                  <li class="nav-item d-none d-sm-inline-block">
+                    <a href="{{ docsroot }}" class="nav-link">{% trans 'Documentation' %}</a>
+                  </li>
+                  {% endif %}
+                {% endif %}
+
+             {% endblock %}
+            {% if user.has_usable_password %}
+              <li class="nav-item d-none d-sm-inline-block">
+                <a href="{% url 'admin:password_change' %}" class="nav-link">{% trans 'Change password' %}</a>
+              </li>
+            {% endif %}
+            <li class="nav-item d-none d-sm-inline-block">
+              <a href="{% url 'admin:logout' %}" class="nav-link">{% trans 'Log out' %}</a>
+            </li>
+                </ul>          {% endif %}
+          {% endblock %}
+          </nav>
+
+          {% block nav-global %}{% endblock %}
+            {% comment %} <div id="user-tools">
+            {% if has_permission %}
+              {% block welcome-msg %}
+                  {% trans 'Welcome,' %}
+                  <strong>{% firstof user.get_short_name user.get_username %}</strong>.
+              {% endblock %}
+              {% block userlinks %}
+                  {% if site_url %}
+                      <a href="{{ site_url }}">{% trans 'View site' %}</a> /
+                  {% endif %}
+                  {% if user.is_active and user.is_staff %}
+                      {% url 'django-admindocs-docroot' as docsroot %}
+                      {% if docsroot %}
+                          <a href="{{ docsroot }}">{% trans 'Documentation' %}</a> /
+                      {% endif %}
+                  {% endif %}
+                  {% if user.has_usable_password %}
+                  <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> /
+                  {% endif %}
+                  <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
+              {% endblock %}
+             {% endif %}
+            </div> {% endcomment %}
+
+
+
+         </header>{% endblock %}
+<!-- Container id="container" -->
+        <section   class="container">
+          {% block aside %}
+          <aside class="aside default-theme  bg1 toggled" >
+              <nav id="sidebar" class="sidebar-wrapper ">
+                <div class="sidebar-content">
+                <!-- sidebar-brand
+                <div class="sidebar-item sidebar-brand">
+
+                </div>-->
+                <!-- sidebar-header  -->
+                <div class="sidebar-item sidebar-header d-flex flex-nowrap">
+                {% if user.is_active %}
+                  <div class="user-pic">
+                    <img class="img-responsive img-rounded" src="{{ user.thumbnail.url }}" alt="User picture">
+                  </div>
+                  <div class="user-info">
+                    <span class="user-name">
+                        <strong>{{ user.username }}</strong>
+                    </span>
+                    <span class="user-role">{{ user.name }}</span>
+
+                    <span class="user-status">
+                        <i class="fa fa-circle"></i>
+                        <span>{{ user.employee_position }}</span>
+                    </span>
+                  </div>
+                {% endif %}
+              </div>
+                <!-- sidebar-search
+                <div class="sidebar-item sidebar-search">
+                    <div>
+                        <div class="input-group">
+                            <input type="text" class="form-control search-menu" placeholder="Search...">
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+                <!-- sidebar-menu  -->
+              <div class=" sidebar-item sidebar-menu">
+                <ul>
+                  <!--<li class="header-menu">
+                      <span>General</span>
+                  </li>-->
+
+                  {% get_app_list request as bdapp_list %}
+
+
+                  {% if bdapp_list %}
+                  {% for app in bdapp_list %}
+                  {% if app.models  is NONE %}
+                  <li class="sidebar-item  {% if app.active %} active {% endif %}">
+                    <a href="{{ app.app_url }}"><i class="fa fa-link"></i>{{app.name}}</a>
+                  </li>
+                  {% else %}
+
+                  <li class="sidebar-dropdown {% if app.active %} active menu-open {% endif %}">
+                    <a href="#">
+                        <i class="fa fa-tachometer-alt"></i>
+                        <span class="menu-text">{{ app.name }}</span>
+
+                    </a>
+                    <div class="sidebar-submenu " {% if app.active %} style="display:block" {% endif %}>
+
+                        <ul>{% for model in app.models %}
+                              {% if model.admin_url %}
+                              <li class="{% if model.active %}active{% endif %}">
+
+                                  <a href="{{ model.admin_url }}">{{ model.name }}
+
+                                  </a>
+                              </li>{% else %}
+
+                              <li class="{% if model.active %}active{% endif %}">
+                                        <a href="#">{{ model.name }}
+
+                              </li>{% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </li>
+                {% endif %}
+                {% endfor %}
+
+                {% else %}
+                  <li>{% trans "You don't have permission to view or edit anything." %}</li>
+                {% endif %}
+                </ul>
+              </div>
+          <!-- sidebar-menu  -->
+            </div>
+          </nav>
+        </aside>
+    {% endblock %}
+    <section class="container is-vertical">
+    {% if not is_popup %}
+    <!-- Header -->
+
+    <!-- END Header -->
+    <main class="main">
+    {% block breadcrumbs %}
+    <div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    {% if title %} &rsaquo; {{ title }}{% endif %}
+    </div>
+    {% endblock %}
+    {% endif %}
+
+    {% block messages %}
+        {% if messages %}
+        <ul class="messagelist">{% for message in messages %}
+          <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+        {% endfor %}</ul>
+        {% endif %}
+    {% endblock messages %}
+
+    <!-- Content -->
+    <div id="content" class="{% block coltype %}colM{% endblock %}">
+        {% block pretitle %}{% endblock %}
+        {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+        {% block content %}
+        {% block object-tools %}{% endblock %}
+        {{ content }}
+        {% endblock %}
+        {% block sidebar %}{% endblock %}
+        <br class="clear">
+    </div>
+    <!-- END Content -->
+</main>
+    {% block footer %}<footer id="footer" class="footer" >
+     {% get_admin_interface_theme as theme %}
+     <div></div><div> <strong>{{ theme.footer }}</strong>
+                        All rights reserved.</div>
+                        <div>
+                        <b>Version</b>{{theme.version}}
+                        </div></footer>{% endblock %}
+
+        </section></section>
+        <!-- page-content" -->
+    </div>
+    <!-- page-wrapper -->
+<!-- END Container -->
+   <script src="{% static 'admin/js/vendor/jquery/jquery.min.js'  %}"></script>
+   {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous">
+    </script> {% endcomment %}
+
+    <script src="{% static 'admin_interface/jquery.mCustomScrollbar.concat.min.js'  %}"></script>
+    {% comment %} <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> {% endcomment %}
+    <!-- using local scripts -->
+    <!-- <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/popper.js/dist/umd/popper.min.js"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../node_modules/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script> -->
+
+
+    <script src="{% static 'admin_interface/sidebar-main.js'  %}" ></script>
+</body>
+</html>

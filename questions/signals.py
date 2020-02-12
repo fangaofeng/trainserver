@@ -3,6 +3,6 @@
 from django.dispatch import Signal
 
 ask = Signal(providing_args=[  # pylint: disable=invalid-name
-    'answer', 'actor', 'verb', 'action_object', 'target', 'description',
-    'timestamp', 'level'
+    'answer', 'actor', 'verb', 'action', 'target', 'description',
+    'created', 'level'
 ])

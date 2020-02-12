@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from .serializers import UploadfileSerializer
+from permissions.permissions import RolePermission
 
 
 class UploadView(generics.CreateAPIView):
@@ -12,7 +13,7 @@ class UploadView(generics.CreateAPIView):
     """The API view to handle font upload and convert the file into json format"""
     serializer_class = UploadfileSerializer
     parser_classes = (MultiPartParser,)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [RolePermission]
     throttle_scope = 'uploads'
 
     def create(self, request, *args, **kwargs):

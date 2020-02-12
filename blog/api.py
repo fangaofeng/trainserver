@@ -6,6 +6,7 @@ from rest_framework.parsers import MultiPartParser
 from common.jsonrender import EmberJSONRenderer
 from common.pagination import ListPagination
 from django_filters.rest_framework import DjangoFilterBackend
+from permissions.permissions import RolePermission
 
 
 class ArticleViewSet(viewsets.ModelViewSet):
@@ -17,7 +18,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
     serializer_class = ArticleSerializer
     parser_classes = (MultiPartParser,)
     pagination_class = ListPagination
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [RolePermission]
     filter_backends = (DjangoFilterBackend,)
     filterset_fields = ('status',)
 

@@ -70,13 +70,34 @@ class TokenSerializer(serializers.ModelSerializer):
     """
     Serializer for Token model.
     """
-    role_display = serializers.CharField()
-    role = serializers.CharField(required=True)
+    # role_display = serializers.CharField()
+    # roles = serializers.ListField(required=True)
+    roles = serializers.StringRelatedField(many=True)
     token = serializers.StringRelatedField(source='key', read_only=True)
 
     class Meta:
         model = TokenModel
-        fields = ('token', 'role', 'role_display')
+        fields = ('token', 'roles',)
+
+
+class AccountInfoDetailsSerializer(serializers.ModelSerializer):
+    """
+    User model w/o password
+    """
+    department_name = serializers.ReadOnlyField(source='department.slug')
+    # role_display = serializers.ReadOnlyField(source='roles.name')
+    thumbnail = serializers.ImageField(read_only=True)
+    unreadnoticescount = serializers.SerializerMethodField()
+
+    def get_unreadnoticescount(self, obj):
+        return obj.notifications.unread().count()
+
+    class Meta:
+        model = UserModel
+        fields = ('id', 'username', 'name', 'avatar', 'user_no', 'employee_position',
+                  'email', 'roles', 'info', 'thumbnail', 'department_name', 'unreadnoticescount', )
+        read_only_fields = ('username', 'roles',  'employee_position',
+                            'user_no', 'department_name', 'thumbnail',)
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):
@@ -84,19 +105,30 @@ class UserDetailsSerializer(serializers.ModelSerializer):
     User model w/o password
     """
     department_name = serializers.ReadOnlyField(source='department.slug')
-    role_display = ChoiceField(source='role', choices=UserModel.EMPLOYEE_ROLE_CHOICES, required=False)
+    # role_display = serializers.ReadOnlyField(source='roles.name')
+    # unreadnoticescount = serializers.SerializerMethodField()
 
+    # def get_unreadnoticescount(self, obj):
+    #     return obj.notifications.unread().count()
     thumbnail = serializers.ImageField(read_only=True)
 
     class Meta:
         model = UserModel
-        fields = (
-            'id', 'username', 'name', 'avatar', 'user_no', 'employee_position', 'email', 'role_display', 'role', 'info',  'thumbnail', 'department_name')
-        read_only_fields = ('username', 'role', 'role_display', 'employee_position', 'user_no', 'department_name')
-        # exclude = [
-        #     'first_name', 'last_name', 'password','is_staff'
-        #
-        # ]
+        fields = ('id', 'username', 'name', 'avatar', 'user_no', 'employee_position', 'email',
+                  'roles', 'info', 'thumbnail', 'department', 'department_name',)
+        read_only_fields = ('id',   'department_name', 'thumbnail',)
+
+
+class UserListSerializer(serializers.Serializer):
+
+    users = serializers.PrimaryKeyRelatedField(required=True, many=True, queryset=UserModel.objects.all())
+
+    class Meta:
+        fields = ['users']
+
+    def deleteusers(self):
+        for user in self.validated_data['users']:
+            user.delete()
 
 
 class UserAvtarSerializer(serializers.ModelSerializer):

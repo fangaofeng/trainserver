@@ -23,15 +23,18 @@ import moviepy.editor as mp
 from PyPDF2 import PdfFileReader
 from common.selffield import ChoiceField
 from django.contrib.auth import get_user_model
-from common.serializers import PUTPATCHSerializer
+from common.serializers import ADDDELSerializer
+from orgs.models import Department
 
 
-class CoursewareSerializer(serializers.ModelSerializer):
+class CoursewareCreateSerializer(serializers.ModelSerializer):
     serializer_choice_field = ChoiceField
     zipfileid = serializers.IntegerField(write_only=True)
     User = get_user_model()
-    trainmanagers = serializers.PrimaryKeyRelatedField(
-        write_only=True, required=False, many=True, queryset=User.objects.filter(role=1))
+    # trainmanagers = serializers.PrimaryKeyRelatedField(
+    #     write_only=True, required=False, many=True, queryset=User.objects.all())
+    # departments = serializers.PrimaryKeyRelatedField(
+    #     required=False, many=True, queryset=Department.objects.all())
     category = ChoiceField(choices=Courseware.COURSEWARE_CATEGORY_CHOICES)
     file_type = ChoiceField(choices=Courseware.FILE_TYPE_CHOICES)
     status = ChoiceField(choices=Courseware.STATUS_CHOICES)
@@ -40,7 +43,7 @@ class CoursewareSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Courseware
-        fields = ['id', 'zipfileid',  "trainmanagers", "courseware_no", "name",  "category",
+        fields = ['id', 'zipfileid',   "departments", "courseware_no", "name",  "category",
                   "intruduce",
                   "applicable_user",
                   "class_hour",
@@ -52,22 +55,24 @@ class CoursewareSerializer(serializers.ModelSerializer):
                   "status",
                   "drag_flag",
                   'courseware_file',
-                  "courseware_type", "property", "create_time", 'creater']
-        read_only_fields = ('id', 'create_time', "cover",
-                            'cover', 'teacherimg',  'courseware_file', "property", 'creater')
+                  "type", "property", "create_time", 'creater', 'recommend']
+        read_only_fields = ['id', 'create_time', "cover",
+                            'cover', 'teacherimg',  'courseware_file', "property", 'creater']
 
         ordering = ['create_time'],
-        extra_kwargs = {'trainmanagers': {'write_only': True}, 'zipfileid': {'write_only': True}}
+        extra_kwargs = {
+            # 'trainmanagers': {'write_only': True},
+            # 'departments': {'write_only': True},
+            'zipfileid': {'write_only': True}}
 
     def to_internal_value(self, data):
-        type = data.get('courseware_type', None)
-        courstype = Coursetype.objects.get(type=type)
-        data['courseware_type'] = courstype.id
-        ret = super(CoursewareSerializer, self).to_internal_value(data)
-        return ret
+        # type = data.get('courseware_type', None)
+        # courstype = Coursetype.objects.get(type=type)
+        # data['courseware_type'] = courstype.type
+        return super(CoursewareCreateSerializer, self).to_internal_value(data)
 
-    def validate_courseware_no(self, value):
-        return value
+    # def validate_courseware_no(self, value):
+    #     return value
 
     def validate(self, attrs):
         zipfileid = attrs['zipfileid']
@@ -117,7 +122,7 @@ class CoursewareSerializer(serializers.ModelSerializer):
             return None
 
         unziparchive = unzipfile.ZipFile(zipfileobject.zipfile.path, 'r')  # 拼接路径得到所需解压文件绝对路径
-        #tempdir = os.path.join(['./',zipfileobject.zipfile.name[:-4]])
+        # tempdir = os.path.join(['./',zipfileobject.zipfile.name[:-4]])
         # a=os.path.basename(zipfileobject.zipfile.path)
         curdir = os.path.dirname(zipfileobject.zipfile.path)
         mkdirname = os.path.splitext(zipfileobject.zipfile.path)[0]
@@ -131,29 +136,29 @@ class CoursewareSerializer(serializers.ModelSerializer):
             teacherimg = unziparchive.extract("fb.jpg", unzipdir)
         if "fhlhg.mp4" in file_list:
             courseware_file = unziparchive.extract("fhlhg.mp4", unzipdir)
-            courseware_type = 'MP4'
+            file_type = 'MP4'
         if "fhlhg.pdf" in file_list:
             courseware_file = unziparchive.extract("fhlhg.pdf", unzipdir)
-            courseware_type = 'PDF'
+            file_type = 'PDF'
         if "config.ini" in file_list:
             config_ini = unziparchive.extract("config.ini", unzipdir)
-            #config_dir = os.path._getfullpathname(config_ini)
+            # config_dir = os.path._getfullpathname(config_ini)
 
             conf = configparser.ConfigParser()
             conf.read(config_ini, encoding='utf-8')  # 读取ini文件
 
             config_dict = dict(conf._sections)  # 转换为字典 格式 需要提取数据转换
             # print(dic_con)
-            #config_json = json.dumps(config_dic)
+            # config_json = json.dumps(config_dic)
 
         unziparchive.close()
-        return cover, teacherimg,  courseware_file, config_dict, zipfileobject.zipfile.path, courseware_type
+        return cover, teacherimg,  courseware_file, config_dict, zipfileobject.zipfile.path, file_type
 
     # def create(self, validated_data):
     #
     #     trainmanagers = validated_data.pop('trainmanagers',[])
     #     # 更改为事务,需要处理重复数据和异常
-    #     instance = super(CoursewareSerializer, self).create(validated_data)
+    #     instance = super(CoursewareCreateSerializer, self).create(validated_data)
     #     querysetlist=[]
     #
     #     for trainmanager in trainmanagers:
@@ -161,14 +166,14 @@ class CoursewareSerializer(serializers.ModelSerializer):
     #     CoursePermission.objects.bulk_create(querysetlist)
     #     return instance
     #
-    def save(self, **kwargs):
-        return super(CoursewareSerializer, self).save(**kwargs)
+    # def save(self, **kwargs):
+    #     return super(CoursewareCreateSerializer, self).save(**kwargs)
     #
     # def update(self, instance, validated_data):
     #
     #     trainmanagers = validated_data.pop('trainmanagers',[])
     #     # 更改为事务,需要处理重复数据和异常
-    #     instance = super(CoursewareSerializer, self).update(instance,validated_data)
+    #     instance = super(CoursewareCreateSerializer, self).update(instance,validated_data)
     #     querysetlist=[]
     #     instance.trainmanagers.clean()
     #     for trainmanager in trainmanagers:
@@ -185,7 +190,7 @@ class CoursewareModifySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Courseware
-        fields = ["id", "name",  "category",
+        fields = ["id", "name",  "category", "departments",
                   "intruduce",
                   "applicable_user",
                   "class_hour",
@@ -195,7 +200,7 @@ class CoursewareModifySerializer(serializers.ModelSerializer):
                   'teacherimg',
                   "cover",
                   "status",
-                  "drag_flag", 'create_time', 'courseware_file', "property"
+                  "drag_flag", 'create_time', 'courseware_file', "property", "recommend"
                   ]
         read_only_fields = ('id',
                             'cover', 'create_time', 'teacherimg',  'courseware_file', "property")
@@ -203,17 +208,17 @@ class CoursewareModifySerializer(serializers.ModelSerializer):
         ordering = ['create_time'],
 
 
-class CoursewareReadonlySerializer(serializers.ModelSerializer):
+class CoursewareSerializer(serializers.ModelSerializer):
     serializer_choice_field = ChoiceField
     category = ChoiceField(choices=Courseware.COURSEWARE_CATEGORY_CHOICES)
     file_type = ChoiceField(choices=Courseware.FILE_TYPE_CHOICES)
     status = ChoiceField(choices=Courseware.STATUS_CHOICES)
-    courseware_type = serializers.CharField(source='courseware_type.type')
+    type = serializers.CharField(source='type.type')
     creater = serializers.CharField(source='creater.name')
 
     class Meta:
         model = Courseware
-        fields = ['id', "courseware_no", "name",  "category",
+        fields = ['id', "courseware_no", "departments", "name",  "category",
                   "intruduce",
                   "applicable_user",
                   "class_hour",
@@ -224,7 +229,7 @@ class CoursewareReadonlySerializer(serializers.ModelSerializer):
                   "cover",
                   "status",
                   "drag_flag", 'courseware_file', 'creater',
-                  "courseware_type", "property"]
+                  "type", "property", "recommend"]
         read_only_fields = ('id', "courseware_no", "name",  "category",
                             "intruduce",
                             "applicable_user",
@@ -236,7 +241,7 @@ class CoursewareReadonlySerializer(serializers.ModelSerializer):
                             "cover",
                             "status",
                             "drag_flag", 'courseware_file', 'creater',
-                            "courseware_type", "property")
+                            "type", "property")
 
         ordering = ['create_time'],
 
@@ -244,19 +249,20 @@ class CoursewareReadonlySerializer(serializers.ModelSerializer):
 class CoursetypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Coursetype
-        fields = '__all__'
+        fields = ['type']
 
 
-class CoursewareMembersSerializer(PUTPATCHSerializer):
+# class CoursewareMembersSerializer(ADDDELSerializer):
 
-    User = get_user_model()
-    trainmanagers = serializers.PrimaryKeyRelatedField(required=False, many=True, queryset=User.objects.all())
+#     User = get_user_model()
+#     # trainmanagers = serializers.PrimaryKeyRelatedField(required=False, many=True, queryset=User.objects.all())
+#     departments = serializers.PrimaryKeyRelatedField(required=False, many=True, queryset=Department.objects.all())
 
-    class Meta:
-        model = Courseware
-        fields = ['trainmanagers']
-        ordering = ['created_time']
-        depth = 1
+#     class Meta:
+#         model = Courseware
+#         fields = ['departments']
+#         ordering = ['created_time']
+#         depth = 1
 
 
 class ZipfileSerializer(serializers.ModelSerializer):

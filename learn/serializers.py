@@ -6,11 +6,12 @@
 
 from rest_framework import serializers  # , exceptions
 from traingroup.models import TrainGroup
-from .models import LearnPlan, LearnProgress
-from course.serializers import CoursewareSerializer, CoursewareReadonlySerializer
+from .models import LearnPlan, LearnProgress, PublicLearnProgress
+from course.serializers import CoursewareSerializer
 from common.selffield import ChoiceField
+from common.serializers import OwnerFieldSerializer
 import pendulum
-
+from rest_flex_fields import FlexFieldsModelSerializer
 from django.utils import timezone
 
 
@@ -38,12 +39,12 @@ class LearnPlanSerializer(serializers.ModelSerializer):
             trainers = traingroup.get_trainers()
             if trainers:
                 for trainer in trainers:
-                    trainer.learnplan_progresses.create(plan_no=instance, traingroup=traingroup)
+                    trainer.learnplan_progresses.create(plan=instance, traingroup=traingroup)
         return instance
 
 
 class LearnPlanReadonlySerializer(serializers.ModelSerializer):
-    course = CoursewareReadonlySerializer()
+    course = CoursewareSerializer()
     ratio = serializers.SerializerMethodField()
     questionanswer = serializers.SerializerMethodField()
     status = serializers.CharField(source='get_status_display')
@@ -57,13 +58,13 @@ class LearnPlanReadonlySerializer(serializers.ModelSerializer):
         ordering = ['create_time']
 
     def get_questionanswer(self, learnplan):
-        num_completed = learnplan.plan_progresses.filter(status='completed').count()
-        count = learnplan.plan_progresses.count()
+        num_completed = learnplan.progresses.filter(status='completed').count()
+        count = learnplan.progresses.count()
         return '{}/{}'.format(num_completed, count)
 
     def get_ratio(self, learnplan):
-        num_completed = learnplan.plan_progresses.filter(status='completed').count()
-        count = learnplan.plan_progresses.count()
+        num_completed = learnplan.progresses.filter(status='completed').count()
+        count = learnplan.progresses.count()
         return '{}/{}'.format(num_completed, count)
 
 
@@ -78,8 +79,8 @@ class LearnPlanGroupSerializer(serializers.ModelSerializer):
 
 
 class LearnProgressSerializer(serializers.ModelSerializer):
-    #course = CoursewareReadonlySerializer(source='plan_no.course')
-    plan = LearnPlanReadonlySerializer(source='plan_no')
+    # course = CoursewareSerializer(source='plan.course')
+    plan = LearnPlanReadonlySerializer()
     status = ChoiceField(choices=LearnProgress.STATUS_CHOICES)
 
     class Meta:
@@ -95,7 +96,7 @@ class LearnProgressSerializer(serializers.ModelSerializer):
             status = data.get('status', 'learning')
             if status == 'completed' or status == 'overdueCompleted':
                 data['end_time'] = timezone.now()
-                if data['end_time'] > self.instance.plan_no.end_time:
+                if data['end_time'] > self.instance.plan.end_time:
                     data['status'] = 'overdueCompleted'
         ret = super(LearnProgressSerializer, self).to_internal_value(data)
         # 修改修改学习计划的状态
@@ -107,7 +108,7 @@ class LearnProgressByGroupSerializer(serializers.ModelSerializer):
     trainer_name = serializers.CharField(source='trainer.name')
     trainer_no = serializers.CharField(source='trainer.user_no')
     trainer_department = serializers.CharField(source='trainer.department.name')
-    #status = ChoiceField(choices=LearnProgress.STATUS_CHOICES)
+    # status = ChoiceField(choices=LearnProgress.STATUS_CHOICES)
     status = serializers.SerializerMethodField()
     learnqusratio = serializers.SerializerMethodField()
 
@@ -124,16 +125,16 @@ class LearnProgressByGroupSerializer(serializers.ModelSerializer):
 
     def get_status(self, learnprogress):
         today = pendulum.today().date()
-        period = pendulum.period(today, learnprogress.plan_no.start_time)
+        period = pendulum.period(today, learnprogress.plan.start_time)
         if learnprogress.status == 'assigned' and period.remaining_days > 0:
             return '已指派'
         else:
             return learnprogress.get_status_display()
 
 
-class LearnProgressOnlySerializer(serializers.ModelSerializer):
-    #course = CoursewareReadonlySerializer(source='plan_no.course')
-    plan = LearnPlanReadonlySerializer(source='plan_no')
+class LearnProgressReadOnlySerializer(serializers.ModelSerializer):
+    # course = CoursewareSerializer(source='plan.course')
+    plan = LearnPlanReadonlySerializer()
     status = serializers.SerializerMethodField()
     rate_progress = serializers.SerializerMethodField()
 
@@ -147,24 +148,24 @@ class LearnProgressOnlySerializer(serializers.ModelSerializer):
         ordering = ['create_time']
 
     def get_rate_progress(self, learnprogress):
-        property = learnprogress.plan_no.course.property
+        property = learnprogress.plan.course.property
 
-        if learnprogress.plan_no.course.file_type == 'PDF':
+        if learnprogress.plan.course.file_type == 'PDF':
             numpage = learnprogress.progress['numpage']
             return round(100*numpage/property['numpages'])
 
-        if learnprogress.plan_no.course.file_type == 'MP4':
+        if learnprogress.plan.course.file_type == 'MP4':
             starttime = learnprogress.progress.get('starttime', 0)
             return round(100*starttime/property['duration'])
 
     def get_days_remaining(self, learnprogress):
         today = pendulum.today().date()
-        period = pendulum.period(learnprogress.plan_no.end_time, today, absolute=True)
+        period = pendulum.period(learnprogress.plan.end_time, today, absolute=True)
         return period.days
 
     def get_status(self, learnprogress):
         today = pendulum.today().date()
-        period = pendulum.period(today, learnprogress.plan_no.start_time)
+        period = pendulum.period(today, learnprogress.plan.start_time)
         if learnprogress.status == 'assigned' and period.remaining_days > 0:
             return '未开始'
         else:
@@ -172,11 +173,36 @@ class LearnProgressOnlySerializer(serializers.ModelSerializer):
 
 
 class AggregationSetForEmployee(serializers.Serializer):
-    learncompletedes = LearnProgressOnlySerializer(many=True)
-    learntodoes = LearnProgressOnlySerializer(many=True)
-    learnoverdue = LearnProgressOnlySerializer(many=True)
+    learncompletedes = LearnProgressReadOnlySerializer(many=True)
+    learntodoes = LearnProgressReadOnlySerializer(many=True)
+    learnoverdue = LearnProgressReadOnlySerializer(many=True)
 
     class Meta:
 
         fields = '__all__'
         read_only_fields = ('learncompletedes', 'learntodoes', 'learnoverdue')
+
+
+class PublicLearnProgressSerializer(OwnerFieldSerializer):
+    status = ChoiceField(required=False, choices=PublicLearnProgress.STATUS_CHOICES)
+
+    class Meta:
+        model = PublicLearnProgress
+        fields = ['id', 'status', 'start_time', 'end_time', 'progress', 'course', "creater"]
+        read_only_fields = ('type', 'created', 'start_time')
+        ordering = ['created']
+        # expandable_fields = {'course': (
+        #     CoursewareSerializer, {'source': 'course', 'read_only': True})}
+
+
+class PublicLearnProgressReadonlySerializer(serializers.ModelSerializer):
+    status = ChoiceField(choices=PublicLearnProgress.STATUS_CHOICES)
+    course = CoursewareSerializer(read_only=True)
+
+    class Meta:
+        model = PublicLearnProgress
+        fields = ['id', 'status', 'start_time', 'end_time', 'progress', 'course']
+        read_only_fields = ('id', 'status', 'start_time', 'end_time', 'progress', 'course')
+        ordering = ['created']
+        # expandable_fields = {'course': (
+        #     CoursewareSerializer, {'source': 'course', 'read_only': True})}

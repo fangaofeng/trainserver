@@ -1,6 +1,8 @@
-from django_extensions.db.models import TimeStampedModel
 from django.contrib.auth import get_user_model
 from django.db import models
+from django_extensions.db.models import TimeStampedModel
+
+
 class CreaterTimeStampedModel(TimeStampedModel):
     """ TimeStampedModel
     An abstract base class model that provides self-managed "created" and
@@ -12,6 +14,7 @@ class CreaterTimeStampedModel(TimeStampedModel):
     creater = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
+        related_name='+',
         blank=True,
         null=True
     )

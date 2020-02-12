@@ -42,10 +42,10 @@ class NotificationTest(TestCase):
     def test_use_timezone(self):
         from_user = User.objects.create(username="from", password="pwd", email="example@example.com")
         to_user = User.objects.create(username="to", password="pwd", email="example@example.com")
-        notify.send(from_user, recipient=to_user, verb='commented', action_object=from_user)
+        notify.send(from_user, recipient=to_user, verb='commented', action=from_user)
         notification = Notification.objects.get(recipient=to_user)
         delta = (
-            timezone.now().replace(tzinfo=utc) - localtime(notification.timestamp, pytz.timezone(settings.TIME_ZONE))
+            timezone.now().replace(tzinfo=utc) - localtime(notification.created, pytz.timezone(settings.TIME_ZONE))
         )
         self.assertTrue(delta.seconds < 60)
         # The delta between the two events will still be less than a second despite the different timezones
@@ -57,9 +57,9 @@ class NotificationTest(TestCase):
     def test_disable_timezone(self):
         from_user = User.objects.create(username="from2", password="pwd", email="example@example.com")
         to_user = User.objects.create(username="to2", password="pwd", email="example@example.com")
-        notify.send(from_user, recipient=to_user, verb='commented', action_object=from_user)
+        notify.send(from_user, recipient=to_user, verb='commented', action=from_user)
         notification = Notification.objects.get(recipient=to_user)
-        delta = timezone.now() - notification.timestamp
+        delta = timezone.now() - notification.created
         self.assertTrue(delta.seconds < 60)
 
 
@@ -77,16 +77,16 @@ class NotificationManagersTest(TestCase):
         self.to_group.user_set.add(self.other_user)
 
         for _ in range(self.message_count):
-            notify.send(self.from_user, recipient=self.to_user, verb='commented', action_object=self.from_user)
+            notify.send(self.from_user, recipient=self.to_user, verb='commented', action=self.from_user)
         # Send notification to group
-        notify.send(self.from_user, recipient=self.to_group, verb='commented', action_object=self.from_user)
+        notify.send(self.from_user, recipient=self.to_group, verb='commented', action=self.from_user)
         self.message_count += self.to_group.user_set.count()
         # Send notification to user list
-        notify.send(self.from_user, recipient=self.to_user_list, verb='commented', action_object=self.from_user)
+        notify.send(self.from_user, recipient=self.to_user_list, verb='commented', action=self.from_user)
         self.message_count += len(self.to_user_list)
 
     def test_notify_send_return_val(self):
-        results = notify.send(self.from_user, recipient=self.to_user, verb='commented', action_object=self.from_user)
+        results = notify.send(self.from_user, recipient=self.to_user, verb='commented', action=self.from_user)
         for result in results:
             if result[0] is notify_handler:
                 self.assertEqual(len(result[1]), 1)
@@ -94,7 +94,7 @@ class NotificationManagersTest(TestCase):
                 self.assertEqual(type(result[1][0]), Notification)
 
     def test_notify_send_return_val_group(self):  # pylint: disable=invalid-name
-        results = notify.send(self.from_user, recipient=self.to_group, verb='commented', action_object=self.from_user)
+        results = notify.send(self.from_user, recipient=self.to_group, verb='commented', action=self.from_user)
         for result in results:
             if result[0] is notify_handler:
                 self.assertEqual(len(result[1]), self.to_group.user_set.count())
@@ -182,7 +182,7 @@ class NotificationTestPages(TestCase):
         self.to_user.is_staff = True
         self.to_user.save()
         for _ in range(self.message_count):
-            notify.send(self.from_user, recipient=self.to_user, verb='commented', action_object=self.from_user)
+            notify.send(self.from_user, recipient=self.to_user, verb='commented', action=self.from_user)
 
     def logout(self):
         self.client.post(reverse('admin:logout')+'?next=/', {})
@@ -295,7 +295,7 @@ class NotificationTestPages(TestCase):
         self.assertEqual(list(data.keys()), ['unread_count'])
         self.assertEqual(data['unread_count'], 0)
 
-        notify.send(self.from_user, recipient=self.to_user, verb='commented', action_object=self.from_user)
+        notify.send(self.from_user, recipient=self.to_user, verb='commented', action=self.from_user)
         response = self.client.get(reverse('notifications:live_unread_notification_count'))
         data = json.loads(response.content.decode('utf-8'))
         self.assertEqual(list(data.keys()), ['unread_count'])
@@ -315,7 +315,7 @@ class NotificationTestPages(TestCase):
         self.assertEqual(list(data.keys()), ['all_count'])
         self.assertEqual(data['all_count'], self.message_count)
 
-        notify.send(self.from_user, recipient=self.to_user, verb='commented', action_object=self.from_user)
+        notify.send(self.from_user, recipient=self.to_user, verb='commented', action=self.from_user)
         response = self.client.get(reverse('notifications:live_all_notification_count'))
         data = json.loads(response.content.decode('utf-8'))
         self.assertEqual(list(data.keys()), ['all_count'])
@@ -352,7 +352,7 @@ class NotificationTestPages(TestCase):
         self.assertEqual(data['unread_count'], 0)
         self.assertEqual(len(data['unread_list']), 0)
 
-        notify.send(self.from_user, recipient=self.to_user, verb='commented', action_object=self.from_user)
+        notify.send(self.from_user, recipient=self.to_user, verb='commented', action=self.from_user)
         response = self.client.get(reverse('notifications:live_unread_notification_list'))
         data = json.loads(response.content.decode('utf-8'))
         self.assertEqual(sorted(list(data.keys())), ['unread_count', 'unread_list'])
@@ -392,7 +392,7 @@ class NotificationTestPages(TestCase):
         self.assertEqual(data['all_count'], self.message_count)
         self.assertEqual(len(data['all_list']), self.message_count)
 
-        notify.send(self.from_user, recipient=self.to_user, verb='commented', action_object=self.from_user)
+        notify.send(self.from_user, recipient=self.to_user, verb='commented', action=self.from_user)
         response = self.client.get(reverse('notifications:live_all_notification_list'))
         data = json.loads(response.content.decode('utf-8'))
         self.assertEqual(sorted(list(data.keys())), ['all_count', 'all_list'])
@@ -460,7 +460,7 @@ class NotificationTestExtraData(TestCase):
                 self.from_user,
                 recipient=self.to_user,
                 verb='commented',
-                action_object=self.from_user,
+                action=self.from_user,
                 url="/learn/ask-a-pro/q/test-question-9/299/",
                 other_content="Hello my 'world'"
             )
@@ -495,7 +495,7 @@ class TagTest(TestCase):
                 self.from_user,
                 recipient=self.to_user,
                 verb='commented',
-                action_object=self.from_user,
+                action=self.from_user,
                 url="/learn/ask-a-pro/q/test-question-9/299/",
                 other_content="Hello my 'world'"
             )

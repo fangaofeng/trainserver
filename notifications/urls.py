@@ -3,13 +3,11 @@
 from distutils.version import StrictVersion  # pylint: disable=no-name-in-module,import-error
 
 from django import get_version
+from django.urls import re_path
 from rest_framework import routers
+
 from . import views
-from .api import NotificationViewSet
-if StrictVersion(get_version()) >= StrictVersion('2.0'):
-    from django.urls import re_path as pattern
-else:
-    from django.conf.urls import url as pattern
+from .api import NotificationTaskViewSet, NotificationViewSet
 
 # from rest_framework import routers
 # from .api import , LearnProgressViewSet
@@ -34,10 +32,9 @@ else:
 
 app_name = 'notifications'
 
-router = routers.DefaultRouter(trailing_slash=False)
+router = routers.SimpleRouter(trailing_slash=False)
 # router = routers.SimpleRouter(trailing_slash=False)
-
-#router.register(r'type', CoursetypeViewSet)
+# router.register(r'type', CoursetypeViewSet)
 router.register(r'notices', NotificationViewSet, basename='notices')
-
+router.register(r'noticetask', NotificationTaskViewSet, basename='noticetask')
 urlpatterns = router.urls

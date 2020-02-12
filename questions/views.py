@@ -173,8 +173,8 @@ def live_unread_question_list(request):
             struct['actor'] = str(question.actor)
         if question.target:
             struct['target'] = str(question.target)
-        if question.action_object:
-            struct['action_object'] = str(question.action_object)
+        if question.action:
+            struct['action'] = str(question.action)
         if question.data:
             struct['data'] = question.data
         unread_list.append(struct)
@@ -220,8 +220,8 @@ def live_all_question_list(request):
             struct['actor'] = str(question.actor)
         if question.target:
             struct['target'] = str(question.target)
-        if question.action_object:
-            struct['action_object'] = str(question.action_object)
+        if question.action:
+            struct['action'] = str(question.action)
         if question.data:
             struct['data'] = question.data
         all_list.append(struct)

@@ -1,14 +1,16 @@
+from django.contrib.auth import get_user_model
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils import timezone
 # Create your models here.
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth import get_user_model
-from django.contrib.postgres.fields import JSONField
-from common.models import CreaterTimeStampedModel
 from django_extensions.db.models import TimeStampedModel
+from mptt.models import TreeForeignKey
+from common.models import CreaterTimeStampedModel
+from django.contrib.auth import get_user_model
 
 
-class ExamPlan(CreaterTimeStampedModel):
+class ExamPlan(TimeStampedModel):
 
     name = models.CharField(
         _('exampaper plan name.'),
@@ -48,6 +50,24 @@ class ExamPlan(CreaterTimeStampedModel):
         verbose_name=_('train group'),
         related_name='exam_plans',
         blank=False,
+        help_text='计划实施的群组',
+    )
+
+    department = TreeForeignKey(
+        'orgs.Department',
+        models.SET_NULL,
+        related_name='examplans',
+        help_text='管理试卷的部门岗位',
+        blank=True,
+        null=True,
+    )
+    User = get_user_model()
+    creater = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='exam_plans',
+        blank=False
+
     )
 
     class Meta:
@@ -66,7 +86,7 @@ class ExamProgress(TimeStampedModel):
     plan = models.ForeignKey(
         ExamPlan,
         on_delete=models.CASCADE,
-        related_name='plan_progresses',
+        related_name='progresses',
         blank=False,
         null=True
     )
@@ -93,18 +113,18 @@ class ExamProgress(TimeStampedModel):
         default='assigned',
         help_text="考试状态"
     )
-    traingroup = models.ForeignKey(
-        'traingroup.TrainGroup',
-        verbose_name=_('traingroup'),
-        on_delete=models.CASCADE,
-        help_text=_('Requered. belong to which of traingroup'),
-        related_name='examplan_progresses',
-        blank=False,
-    )
+    # traingroup = models.ForeignKey(
+    #     'traingroup.TrainGroup',
+    #     verbose_name=_('traingroup'),
+    #     on_delete=models.CASCADE,
+    #     help_text=_('Requered. belong to which of traingroup'),
+    #     related_name='examplan_progresses',
+    #     blank=False,
+    # )
     start_time = models.DateTimeField(_('start time '), blank=True, null=True)
     end_time = models.DateTimeField(_('end time '), blank=True, null=True)
     score = models.PositiveIntegerField(_('score of test '), default=0)
-    answers = JSONField(default=dict(), blank=True)
+    answers = JSONField(default=dict, blank=True)
 
     def change_status(self):
         if self.status == 'completed' and self.status == 'overdueCompleted':

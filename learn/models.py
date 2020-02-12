@@ -1,14 +1,16 @@
+from common.models import CreaterTimeStampedModel
+from django.contrib.auth import get_user_model
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils import timezone
 # Create your models here.
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth import get_user_model
-from django.contrib.postgres.fields import JSONField
+from mptt.models import TreeForeignKey
 
 
-class LearnPlan(models.Model):
+class LearnPlan(CreaterTimeStampedModel):
 
-    # plan_no = models.CharField(
+    # plan = models.CharField(
     #     _('learn plan No.'),
     #     max_length=12,
     #     unique=True,
@@ -63,17 +65,20 @@ class LearnPlan(models.Model):
                               help_text="学习状态"
                               )
 
-    # exampaper = models.OneToOneField(
-    #     'exampaper.ExamPaper',
-    #     on_delete=models.SET_NULL,
-    #     blank=True,
-    #     null=True,
-    # )
+    department = TreeForeignKey(
+        'orgs.Department',
+        models.SET_NULL,
+        related_name='learnplans',
+        help_text='管理学习计划的部门岗位',
+        blank=True,
+        null=True,
+    )
     traingroups = models.ManyToManyField(
         'traingroup.TrainGroup',
         verbose_name=_('train group'),
         related_name='learn_plans',
         blank=False,
+        help_text='计划实施的群组',
     )
     User = get_user_model()
     creater = models.ForeignKey(
@@ -83,7 +88,7 @@ class LearnPlan(models.Model):
         blank=False
 
     )
-    create_time = models.DateTimeField(_('create'), default=timezone.now)
+    # create_time = models.DateTimeField(_('create'), default=timezone.now)
 
     class Meta:
 
@@ -98,10 +103,10 @@ class LearnPlan(models.Model):
 
 class LearnProgress(models.Model):
 
-    plan_no = models.ForeignKey(
+    plan = models.ForeignKey(
         LearnPlan,
         on_delete=models.CASCADE,
-        related_name='plan_progresses',
+        related_name='progresses',
         blank=False,
         null=True
     )
@@ -132,25 +137,25 @@ class LearnProgress(models.Model):
         default='assigned',
         help_text="学习状态"
     )
-    traingroup = models.ForeignKey(
-        'traingroup.TrainGroup',
-        verbose_name=_('traingroup'),
-        on_delete=models.CASCADE,
-        help_text=_('Requered. belong to which of traingroup'),
-        related_name='learnplan_progress',
-        blank=False,
-    )
+    # traingroup = models.ForeignKey(
+    #     'traingroup.TrainGroup',
+    #     verbose_name=_('traingroup'),
+    #     on_delete=models.CASCADE,
+    #     help_text=_('Requered. belong to which of traingroup'),
+    #     related_name='learnplan_progress',
+    #     blank=False,
+    # )
     start_time = models.DateTimeField(_('start time '), blank=True, null=True)
     end_time = models.DateTimeField(_('end time '), blank=True, null=True)
 
-    progress = JSONField("progress info", default=dict())
+    progress = JSONField("progress info", default=dict)
     create_time = models.DateTimeField(_('create'), default=timezone.now)
     type = models.CharField(max_length=20, default='course')
 
     def default_progress(self):
-        if self.plan_no.course.file_type == 'PDF':
+        if self.plan.course.file_type == 'PDF':
             self.progress = {'numpage': 1}
-        if self.plan_no.course.file_type == 'MP4':
+        if self.plan.course.file_type == 'MP4':
             self.progress = {'starttime': 0}
         return self.progress
 
@@ -161,13 +166,74 @@ class LearnProgress(models.Model):
     def save(self, *args, **kwargs):
         if self.progress == {}:
             self.progress = self.default_progress()
-
+        self.type = self.plan.course.file_type
         super(LearnProgress, self).save(*args, **kwargs)
 
     class Meta:
-        unique_together = ("plan_no", "trainer")
+        unique_together = ("plan", "trainer")
         verbose_name = _('learn plan progress')
         verbose_name_plural = _('learn_plan progresses')
 
     def __str__(self):
-        return '{}_{}'.format(self.trainer_id, self.plan_no_id)
+        return '{}_{}'.format(self.trainer_id, self.plan_id)
+
+
+class PublicLearnProgress(CreaterTimeStampedModel):
+
+    course = models.ForeignKey(
+        'course.Courseware',
+        on_delete=models.CASCADE,
+        related_name='publicLearn_progresses',
+        blank=False,
+        null=True
+    )
+    User = get_user_model()
+    creater = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='publicLearn_progresses',
+        blank=False,
+        null=True
+    )
+    STATUS_CHOICES = (
+        ('learning', '学习中'),
+        ('completed', '已完成'),
+        ('overdue', '已逾期'),
+    )
+
+    status = models.CharField(
+        max_length=19,
+        choices=STATUS_CHOICES,
+        default='learning',
+        help_text="学习状态"
+    )
+
+    start_time = models.DateTimeField(_('start time '), blank=True, null=True)
+    end_time = models.DateTimeField(_('end time '), blank=True, null=True)
+
+    progress = JSONField("progress info", default=dict)
+    # create_time = models.DateTimeField(_('create'), default=timezone.now)
+
+    def default_progress(self):
+        if self.course.file_type == 'PDF':
+            self.progress = {'numpage': 1}
+        if self.course.file_type == 'MP4':
+            self.progress = {'starttime': 0}
+        return self.progress
+
+    # def change_status(self):
+    #     if self.status == 'completed' and self.status == 'overdueCompleted':
+    #         return
+
+    def save(self, *args, **kwargs):
+        if self.progress == {}:
+            self.progress = self.default_progress()
+        super(PublicLearnProgress, self).save(*args, **kwargs)
+
+    class Meta:
+        unique_together = ("course", "creater")
+        verbose_name = _('learn plan public progress')
+        verbose_name_plural = _('learn_plan public progresses')
+
+    def __str__(self):
+        return '{}_{}'.format(self.creater_id, self.course_id)

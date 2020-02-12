@@ -1,28 +1,31 @@
+import binascii
+import os
+
 from django.conf import settings
-from rest_framework.authtoken.models import Token as DefaultTokenModel
-from django.db import models
-from .utils import import_callable
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
-from .validators import DigitserNoValidator
-import binascii
-import os
-from mptt.models import TreeForeignKey
 from model_utils import Choices
+from mptt.models import TreeForeignKey
+from rest_framework.authtoken.models import Token as DefaultTokenModel
+from permissions.models import RestPermissionsMixin
+from .utils import import_callable
+from .validators import DigitserNoValidator
+
 # Register your models here.
 
 
-class User(AbstractUser):
+class User(AbstractUser, RestPermissionsMixin):
     """
-    user_no 员工编号
-    name 员工姓名
+    user_no 学员编号
+    name 学员姓名
     username 登录账号
     password 登录密码
     department 所属部门
-    employee_position 员工职务
-    role 员工类别
+    employee_position 学员职务
+    roles 学员类别
     info 个性化信息
     """
     userNo_validator = DigitserNoValidator()
@@ -31,17 +34,17 @@ class User(AbstractUser):
         _('user No.'),
         max_length=12,
         unique=True,
-        help_text=_('Required. 员工编号（12位数字，不足在前面补0，如：201810000051）'),
+        help_text=_('Required. 学员编号（12位数字，不足在前面补0，如：201810000051）'),
         validators=[userNo_validator],
         error_messages={
             'unique': _("A user  with that user No already exists."),
         },
     )
-    name = models.CharField(_(' name'), max_length=50, blank=True, help_text="员工姓名")
+    name = models.CharField(_(' name'), max_length=50, blank=True, help_text="学员姓名")
     department = TreeForeignKey(
         'orgs.Department',
-        models.SET_NULL,
-        related_name='employee',
+        on_delete=models.SET_NULL,
+        related_name='members',
         blank=True,
         null=True,
     )
@@ -51,22 +54,28 @@ class User(AbstractUser):
     # EMPLOYEE_ROLE_CHOICES = (
     #     (0, '系统管理员'),
     #     (1, '培训管理员'),
-    #     (2, '员工')
+    #     (2, '学员')
 
     # )
-    EMPLOYEE_ROLE_CHOICES = Choices('系统管理员', '培训管理员', '员工')
-    role = models.CharField(
+    # EMPLOYEE_ROLE_CHOICES = Choices('系统管理员', '培训管理员', '学员')
+    # roles = models.CharField(
 
-        choices=EMPLOYEE_ROLE_CHOICES,
-        default='员工',
-        null=False,
-        blank=False,
-        max_length=20,
-        help_text="员工类别"
+    #     choices=EMPLOYEE_ROLE_CHOICES,
+    #     default='学员',
+    #     null=False,
+    #     blank=False,
+    #     max_length=20,
+    #     help_text="学员类别"
+    # )
+    # roles = models.ForeignKey(on_delete=models.CASCADE, related_name='user', to_field='name',
+    #                           to='permissions.Role', blank=True,  verbose_name=_('roles'), default='AnonymousUser')
+
+    block_password_change = models.BooleanField(
+        default=False,
+        verbose_name=_('Forbid this user from changing their password.')
     )
-
     avatar = models.ImageField(
-        upload_to="avatar", null=True, blank=True, verbose_name=_('Avatar')
+        upload_to="avatar", null=True, blank=True, default="avatar/user.jpg", verbose_name=_('Avatar')
     )
     thumbnail = ImageSpecField(source='avatar',
                                processors=[ResizeToFill(200, 200)],
@@ -78,8 +87,11 @@ class User(AbstractUser):
         swappable = 'AUTH_USER_MODEL'
         ordering = ['username']
 
-    def user_is_role(self, role):
-        return role == self.role
+    def user_is_role(self, roles):
+        return roles == self.roles
+
+    def natural_key(self):
+        return (self.user_no)
 
 
 TokenModel = import_callable(

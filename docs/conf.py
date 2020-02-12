@@ -65,7 +65,7 @@ release = "0.1"
 # directories to ignore when looking for source files.
 exclude_patterns = ["_build"]
 
-# The reST default role (used for this markup: `text`) to use for all documents.
+# The reST default roles (used for this markup: `text`) to use for all documents.
 # default_role = None
 
 # If true, '()' will be appended to :func: etc. cross-reference text.
@@ -121,7 +121,7 @@ html_theme = "default"
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 
-# If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
+# If not '', a 'Last updated on:' created is inserted at every page bottom,
 # using the given strftime format.
 # html_last_updated_fmt = '%b %d, %Y'
 

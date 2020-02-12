@@ -1,14 +1,14 @@
 from rest_framework import routers
-from .api import OrgViewSet, OrganizationViewSet
+from .api import OrgViewSet
 from .api import ExcelfileUploadView
 from django.urls import path
-router = routers.DefaultRouter(trailing_slash=False)
+router = routers.SimpleRouter(trailing_slash=False)
 router.register(r'departments', OrgViewSet)
 # router.register(r'departments/detail', DepartmentDetailView)
 #
 urlpatterns = router.urls
 urlpatterns += [
     #     path('departments/', OrgViewSet.as_view({'get': 'list'})),
-    path('excelupload', ExcelfileUploadView.as_view())
+    path('upload', ExcelfileUploadView.as_view(), name='org_upload')
     #     #path('departments/<int:id>/', OrganizationViewSet.as_view({'get': 'list'})),
 ]

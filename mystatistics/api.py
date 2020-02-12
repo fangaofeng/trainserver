@@ -10,6 +10,7 @@ from rest_framework.throttling import BaseThrottle, SimpleRateThrottle
 
 from .models import Website_views
 from django.utils import timezone
+from permissions.permissions import RolePermission
 
 
 class StatisticsThrottle(BaseThrottle):
@@ -24,8 +25,8 @@ class GetStatistics(APIView):
     * Requires token authentication.
     * Only admin users are able to access this view.
     """
-    authentication_classes = [authentication.TokenAuthentication]
-    #permission_classes = [permissions.IsAdminUser]
+    # authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [RolePermission]
     renderer_classes = (EmberJSONRenderer,)
 
     def get(self, request, format=None):
@@ -33,10 +34,10 @@ class GetStatistics(APIView):
         Return a list of all users.
         """
         User = get_user_model()
-        stuCount = User.objects.filter(role='2').count()
+        stuCount = User.objects.count()
         allUser = User.objects.count()
-        trainerCount = User.objects.filter(role='1').count()
-        systermmanagerCount = User.objects.filter(role='1').count()
+        trainerCount = User.objects.count()
+        systermmanagerCount = User.objects.count()
         coursewareCount = Courseware.objects.count()
         courserwareonCount = Courseware.objects.filter(status='已上架').count()
         courserwarePdf = Courseware.objects.filter(file_type='PDF').count()
@@ -45,7 +46,9 @@ class GetStatistics(APIView):
         exampaperonCount = ExamPaPer.objects.filter(status='已上架').count()
         websiteViews = Website_views.objects.count()
         statstime = timezone.now().strftime('%Y-%m-%d %H:%M:%S')
-        data = dict(stuCount=stuCount, allUser=allUser, trainerCount=trainerCount, systermmanagerCount=systermmanagerCount, coursewareCount=coursewareCount,
-                    courserwareonCount=courserwareonCount, courserwareMp4=courserwareMp4, exampaperCount=exampaperCount, exampaperonCount=exampaperonCount, websiteViews=websiteViews, statstime=statstime)
+        data = dict(stuCount=stuCount, allUser=allUser, trainerCount=trainerCount,
+                    systermmanagerCount=systermmanagerCount, coursewareCount=coursewareCount,
+                    courserwareonCount=courserwareonCount, courserwareMp4=courserwareMp4, exampaperCount=exampaperCount,
+                    exampaperonCount=exampaperonCount, websiteViews=websiteViews, statstime=statstime)
 
         return Response(data)

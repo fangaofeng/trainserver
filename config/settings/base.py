@@ -12,7 +12,7 @@ env = environ.Env()
 
 READ_DOT_ENV_FILE = env.bool('DJANGO_READ_DOT_ENV_FILE', default=True)
 if READ_DOT_ENV_FILE:
-                    # OS environment variables take precedence over variables from .env
+    # OS environment variables take precedence over variables from .env
     env.read_env(str(ROOT_DIR.path('.env')))
 
 # GENERAL
@@ -41,6 +41,7 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
     'default': env.db('DATABASE_URL'),
+
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
@@ -55,23 +56,41 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # ------------------------------------------------------------------------------
 DJANGO_APPS = [
     'corsheaders',
+    # 'fluent_dashboard',
+    # 'admin_tools',
+    # 'admin_tools.theming',
+    # 'admin_tools.menu',
+    # 'admin_tools.dashboard',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    # 'debug_toolbar',
     # 'django.contrib.humanize', # Handy template tags
     # 'bdadmin',
+    # 'grappelli',
+    # 'simpleui',
+    # 'nucleus',
+
     # 'bootstrap_admin',
+    # 'bootstrap4',
+    # 'nested_inline',
 
     'admin_interface',
-    # 'flat_responsive',  # only if django version < 2.0
-    # 'flat',  # only if django version < 1.9
     'colorfield',
+    'admin_timeline',
+    # 'adminlteui',
+    # 'treebeard',
     # 'adminactions',
     # 'vali',
-    'django.contrib.admin'
+    # 'adminlte3',
+    # # Optional: Django admin theme (must be before django.contrib.admin)
+    # 'adminlte3_theme',
+    'django.contrib.admin',
+
 ]
 THIRD_PARTY_APPS = [
 
@@ -80,19 +99,29 @@ THIRD_PARTY_APPS = [
     # 'allauth.socialaccount',
 
     # 'django_mptt_admin',
-    'crispy_forms',
+    # 'crispy_forms',
     # 'django_select2',
+    # pip install django-private-storage 媒体文件可以鉴权
+    # pip install django-auditlog 日志
+    # pip install django-cacheops 数据缓存
+    # 'captcha',  验证码
     # 'easy_thumbnails',
-    'image_cropping',
-    # 'django_ajax',
-    # 'cruds_adminlte',
+    # 'image_cropping',  图片剪切
+    'admin_honeypot',
+    'django_json_widget',
     'mptt',
     'import_export',
     'rest_framework_filters',
-    'rest_framework',
+    'rest_framework',              # 有自行修改部分，需要合并
     'rest_framework.authtoken',
-    'imagekit'
-
+    'imagekit',
+    'simple_history',
+    # 'dashing',
+    # 'controlcenter',
+    # 'django_json_widget',
+    # 'dash',
+    # 'dash.contrib.plugins.weather',
+    # 'nested_admin',
 
 ]
 LOCAL_APPS = [
@@ -109,7 +138,9 @@ LOCAL_APPS = [
     'blog.apps.BlogConfig',
     'uploadfile.apps.UploadfileConfig',
     'mystatistics.apps.MystatisticsConfig',
-    'geo.apps.GeoConfig'
+    'geo.apps.GeoConfig',
+    'permissions.apps.PermissionsConfig',
+    'frontend'
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -121,6 +152,11 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 MIGRATION_MODULES = {
     'sites': 'contrib.sites.migrations'
 }
+
+
+# CORS_ORIGIN_ALLOW_ALL
+# 3
+SIMPLEUI_HOME_TITLE = '网络培训'
 
 # AUTHENTICATION
 # ------------------------------------------------------------------------------
@@ -139,7 +175,7 @@ REST_USE_JWT = False
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.BasicAuthentication'
+        'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication'
     ),
     'UPLOADED_FILES_USE_URL': True,
@@ -203,16 +239,20 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
 
-
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsPostCsrfMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'mystatistics.VisitTimesMiddleware.VisitTimes'
+    'mystatistics.VisitTimesMiddleware.VisitTimes',
+    'simple_history.middleware.HistoryRequestMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware'
+
 ]
 
 # STATIC
@@ -255,13 +295,16 @@ TEMPLATES = [
             # https://docs.djangoproject.com/en/dev/ref/settings/#template-loaders
             # https://docs.djangoproject.com/en/dev/ref/templates/api/#loader-types
             'loaders': [
+                # 'admin_tools.template_loaders.Loader',
                 'django.template.loaders.filesystem.Loader',
                 'django.template.loaders.app_directories.Loader',
+
             ],
             # https://docs.djangoproject.com/en/dev/ref/settings/#template-context-processors
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
+                # 'django.core.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.template.context_processors.i18n',
                 'django.template.context_processors.media',
@@ -286,14 +329,17 @@ FIXTURE_DIRS = (
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
-
+# prefix url
+FRONT_END_PREFIX = 'frond/'
+REST_API_PREFIX = 'api/'
 # ADMIN
 # ------------------------------------------------------------------------------
 # Django Admin URL.
 ADMIN_URL = 'admin/'
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = [
-    ("""fgf@whl""", 'fgf@whl@example.com'),
+    ("""fgf""", 'fgf@whl.com'),
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
@@ -371,3 +417,25 @@ VALI_CONFIG = {
 #     }
 # }
 DJANGO_NOTIFICATIONS_CONFIG = {'SOFT_DELETE': True}
+# simpui
+SIMPLEUI_ANALYSIS = False
+
+
+# CONTROLCENTER_DASHBOARDS = (
+#     ('mydash', 'dashboards.MyDashboard'),
+# )
+# ADMIN_TOOLS_INDEX_DASHBOARD = 'fluent_dashboard.dashboard.FluentIndexDashboard'
+# ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'fluent_dashboard.dashboard.FluentAppIndexDashboard'
+# ADMIN_TOOLS_MENU = 'fluent_dashboard.menu.FluentMenu'
+
+
+# upload path
+UPLOAD_PATH = {
+    'blog_cover': "blog",
+    'courseware_cover': "courseware",
+    'courseware_file': 'courseware',
+    # 'teachimage': 'teachimg'
+    'zipfilte': 'tempzipfile',
+    'avatar': "avatar",
+    'org_excelfile': 'org',
+    'exam_excelfile': 'examexcel'}

@@ -9,6 +9,7 @@ from django_extensions.db.models import TimeStampedModel
 from common.models import CreaterTimeStampedModel
 from django.contrib.postgres.fields import JSONField
 from django.core.validators import MaxValueValidator, MinValueValidator
+from mptt.models import TreeManyToManyField
 
 
 class QuestionExam(CreaterTimeStampedModel):
@@ -35,7 +36,7 @@ class QuestionExam(CreaterTimeStampedModel):
     analysis = models.CharField(_('analysis for question'), max_length=300, blank=True,
                                 null=True)
 
-    options = JSONField(default=dict(), blank=True)
+    options = JSONField(default=dict, blank=True)
     answer = models.CharField(_('analysis for question'), max_length=300, blank=False)
 
     class Meta:
@@ -81,27 +82,21 @@ class ExamPaPer(CreaterTimeStampedModel):
     examexcel_file = models.FileField(upload_to='examexcelfile/', blank=True)
 
     User = get_user_model()
-    trainmanagers = models.ManyToManyField(
-        User,
-        limit_choices_to={'role': 1},
-        related_name='exampapers',
-        blank=True
+    # trainmanagers = models.ManyToManyField(
+    #     User,
+    #     # limit_choices_to={'role': "培训管理员"},
+    #     related_name='exampapers',
+    #     blank=True
+    # )
+
+    departments = TreeManyToManyField(
+        'orgs.Department',
+        related_name='exmpapers',
+        blank=True,
+        help_text='可以使用试卷的部门',
+
     )
-    # multichoices = models.ManyToManyField(
-    #     QuestionExam,
-    #     related_name='exampaper_multichoices',
-    #     blank=True
-    # )
-    # singlechoices = models.ManyToManyField(
-    #     QuestionExam,
-    #     related_name='exampaper_singlechoices',
-    #     blank=True
-    # )
-    # judgements = models.ManyToManyField(
-    #     QuestionExam,
-    #     related_name='exampaper_judgements',
-    #     blank=True
-    # )
+
     questions = models.ManyToManyField(
         QuestionExam,
         related_name='exampaper_questions',

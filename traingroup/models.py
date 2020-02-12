@@ -5,37 +5,6 @@ from django.contrib.auth import get_user_model
 from mptt.models import TreeForeignKey
 
 
-class TrainManagerPermission(models.Model):
-    """
-
-    """
-    created_time = models.DateTimeField(auto_now_add=True, null=True,
-                                        verbose_name=_('Date created'))
-    User = get_user_model()
-    administrator = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
-        blank=False,
-        related_name='managerdepartment',
-        limit_choices_to={'role': 1}
-    )
-
-    department = TreeForeignKey(
-        'orgs.Department',
-        models.CASCADE,
-        verbose_name=_('administrator '),
-        blank=False,
-
-    )
-
-    class Meta:
-        verbose_name = _('train manager info ')
-        verbose_name_plural = _('train_manager_info')
-
-    def __str__(self):
-        return '_'.join([self.administrator.username, self.department.name])
-
-
 class TrainGroup(models.Model):
     """
 
@@ -53,15 +22,24 @@ class TrainGroup(models.Model):
     )
     created_time = models.DateTimeField(auto_now_add=True, null=True,
                                         verbose_name=_('Date created'))
-    User = get_user_model()
-    administrator = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        verbose_name=_('administrator of group'),
-        limit_choices_to={'role': 1},
-        related_name='managerofgroup',
-        blank=False,
+    # User = get_user_model()
+    # administrator = models.ForeignKey(
+    #     User,
+    #     on_delete=models.CASCADE,
+    #     verbose_name=_('administrator of group'),
+    #     # limit_choices_to={'roles': "培训管理员"},
+    #     related_name='managerofgroup',
+    #     blank=False,
+    # )
+
+    department = TreeForeignKey(
+        'orgs.Department',
+        models.SET_NULL,
+        related_name='traingroups',
+        blank=True,
+        null=True,
     )
+
     User = get_user_model()
     trainers = models.ManyToManyField(
         User,
@@ -73,15 +51,15 @@ class TrainGroup(models.Model):
     def get_trainers(self):
         return self.trainers.all()
 
-    @classmethod
-    def get_groupself(cls, ower):
-        return cls.objects.filter(administrator=ower)
+    # @classmethod
+    # def get_groupself(cls, ower):
+    #     return cls.objects.filter(administrator=ower)
 
     class Meta:
         ordering = ['name']
         verbose_name = _('train_group')
         verbose_name_plural = _('train_groups')
-        unique_together = ("administrator", "name")
+        unique_together = ("department", "name")
 
     def __str__(self):
         return self.name

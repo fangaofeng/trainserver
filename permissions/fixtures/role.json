@@ -1,0 +1,9 @@
+[
+  {
+    "model": "permissions.Role",
+    "pk": 1,
+    "fields": {
+      "label": "AnonymousUser"
+    }
+  }
+]

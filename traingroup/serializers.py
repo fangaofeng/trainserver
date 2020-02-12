@@ -4,7 +4,7 @@
 # from django.utils.encoding import force_text
 # from rest_framework.exceptions import ValidationError
 from rest_framework import serializers  # , exceptions
-from .models import TrainGroup, TrainManagerPermission
+from .models import TrainGroup
 from django.contrib.auth import get_user_model
 from users.serializers import UserDetailsSerializer
 from rest_framework.utils import model_meta
@@ -164,15 +164,15 @@ class TrainGropMemberListSerializer(serializers.ModelSerializer):
         return instance
 
 
-class TrainManagerPermissionSerializer(serializers.ModelSerializer):
-    """
-    Serializer for Token model.
-    """
-    User = get_user_model()
-    administrator = serializers.PrimaryKeyRelatedField(required=True, queryset=User.objects.filter(role=1))
+# class TrainManagerPermissionSerializer(serializers.ModelSerializer):
+#     """
+#     Serializer for Token model.
+#     """
+#     User = get_user_model()
+#     administrator = serializers.PrimaryKeyRelatedField(required=True, queryset=User.objects.filter(role=1))
 
-    class Meta:
-        model = TrainManagerPermission
-        fields = ('id', 'created_time', 'administrator', 'department')
-        read_only_fields = ('created_time',)
-        ordering = ['created_time']
+#     class Meta:
+#         model = TrainManagerPermission
+#         fields = ('id', 'created_time', 'administrator', 'department')
+#         read_only_fields = ('created_time',)
+#         ordering = ['created_time']

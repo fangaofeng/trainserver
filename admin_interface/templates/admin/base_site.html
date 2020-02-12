@@ -1,0 +1,67 @@
+{% extends 'admin/base.html' %}
+{% load i18n static admin_interface_tags %}
+
+{% block title %}
+{% get_admin_interface_theme as theme %}
+{% if title %}{{ title }} | {% endif %}{% if theme.title %}{% trans theme.title %}{% else %}{{ site_title|default:_('Django administration') }}{% endif %}
+{% endblock %}
+
+{% block extrastyle %}
+{% get_admin_interface_theme as theme %}
+{% get_admin_interface_version as version %}
+<style type="text/css">
+/*
+django-admin-interface {{ version }}
+https://github.com/fabiocaccamo/django-admin-interface
+*/
+{% include "admin_interface/css/admin-interface.css" %}
+{% include "admin_interface/css/admin-interface-fix.css" %}
+{% include "admin_interface/css/list-filter-dropdown.css" %}
+{% include "admin_interface/css/recent-actions.css" %}
+{% include "admin_interface/css/related-modal.css" %}
+{% include "admin_interface/css/jquery.ui.tabs.css" %}
+{% include "admin_interface/css/modeltranslation.css" %}
+{% include "admin_interface/css/sorl-thumbnail.css" %}
+{% include "admin_interface/css/tabbed-admin.css" %}
+{% include "admin_interface/css/ckeditor.css" %}
+{% include "admin_interface/css/tinymce.css" %}
+
+{% if theme.css %}
+    {{ theme.css|safe }}
+{% endif %}
+
+</style>
+{% endblock %}
+
+{% block blockbots %}
+{{ block.super }}
+{% get_admin_interface_theme as theme %}
+{% get_admin_interface_version as version %}
+{# https://github.com/elky/django-flat-responsive#important-note #}
+{% comment %} <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/responsive.css' %}?v={{ version }}" /> {% endcomment %}
+{% comment %} <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous"> {% endcomment %}
+{% include "admin_interface/favicon.html" %}
+{% include "admin_interface/related-modal.html" %}
+{% endblock %}
+
+{% block bodyclass %}admin-interface flat-theme {% get_admin_interface_theme as theme %}{% if theme.name %}{{ theme.name|slugify }}-theme{% endif %}{% endblock %}
+
+
+
+{% block welcome-msg %}
+{% get_admin_interface_theme as theme %}
+{% if theme.language_chooser_active %}
+    {% get_admin_interface_languages as languages %}
+    {% include "admin_interface/language_chooser.html" %}
+{% endif %}
+{% if theme.env_visible_in_header %}<span class="environment-label {{ theme.env_name }}"></span> - {% endif %}{{ block.super }}<br>
+{% endblock %}
+
+  {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous">
+    </script>
+    <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script> {% endcomment %}

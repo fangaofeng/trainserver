@@ -1,40 +1,46 @@
-from django_filters.rest_framework import DjangoFilterBackend
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
-from django.contrib.auth import (
-    login as django_login,
-    logout as django_logout
-)
-from common.jsonrender import EmberJSONRenderer
-from config.settings import base
-from .models import Excelfile, User
-from django.conf import settings
 import xlrd
-from orgs.models import Department
-from django.contrib.auth import get_user_model
-from django.core.exceptions import ObjectDoesNotExist
-from django.utils.decorators import method_decorator
-from django.utils.translation import ugettext_lazy as _
-from django.views.decorators.debug import sensitive_post_parameters
+from common.jsonrender import EmberJSONRenderer
 from common.pagination import ListPagination
-from rest_framework import status
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView, ListAPIView, CreateAPIView
-from rest_framework.viewsets import ReadOnlyModelViewSet
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.parsers import MultiPartParser
-from .app_settings import (
-    TokenSerializer, UserDetailsSerializer, LoginSerializer,
-    PasswordResetSerializer, PasswordResetConfirmSerializer,
-    PasswordChangeSerializer, JWTSerializer, create_token
-)
-from .models import TokenModel
-from .utils import jwt_encode
-# from rest_framework import viewsets, generics
-from .serializers import ExcelfileSerializer, UserAvtarSerializer
-from traingroup.models import TrainManagerPermission
+from common.viewset import ListUpdateViewSet, RoleFilterMixViewSet
+from config.settings import base
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.contrib.auth import login as django_login
+from django.contrib.auth import logout as django_logout
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
+from django.utils.decorators import method_decorator
+from django.views.decorators.debug import sensitive_post_parameters
+from django.utils.translation import ugettext_lazy as _
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from orgs.models import Department
+from permissions.filters import RoleFilterBackend
+from permissions.permissions import RolePermission
+from rest_framework import status
+from rest_framework.decorators import action
+from rest_framework.generics import CreateAPIView, GenericAPIView, ListAPIView, RetrieveUpdateAPIView
+from rest_framework.parsers import MultiPartParser
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from .filter import IsManagerFilterBackend, IsOwnerFilterBackend
+
+from .app_settings import (
+    JWTSerializer,
+    LoginSerializer,
+    PasswordChangeSerializer,
+    PasswordResetConfirmSerializer,
+    PasswordResetSerializer,
+    TokenSerializer,
+    UserDetailsSerializer,
+    create_token
+)
+from .models import Excelfile, TokenModel, User
+# from rest_framework import viewsets, generics
+from .serializers import AccountInfoDetailsSerializer, ExcelfileSerializer, UserAvtarSerializer, UserListSerializer
+from .utils import jwt_encode
 
 sensitive_post_parameters_m = method_decorator(
     sensitive_post_parameters(
@@ -47,7 +53,7 @@ class ExcelfileUploadView(CreateAPIView):
     """
     上传导入部门的excel文件，文件后缀名：xlsx
     """
-
+    permission_classes = [RolePermission]
     parser_classes = (MultiPartParser,)
     serializer_class = ExcelfileSerializer
 
@@ -61,7 +67,8 @@ class ExcelfileUploadView(CreateAPIView):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         # 重载response ，返回统一处理
-        return Response({'status': 'ok', 'importcount': count, 'importid': importid}, status=status.HTTP_200_OK, headers=headers)
+        return Response({'status': 'ok', 'importcount': count, 'importid': importid},
+                        status=status.HTTP_200_OK, headers=headers)
 
     def importexcel(self):
         """
@@ -76,13 +83,13 @@ class ExcelfileUploadView(CreateAPIView):
         ncols = sheet.ncols
         count = 0
         headers = [
-            'user_no',  # 员工编号
-            'name',  # '员工姓名'
+            'user_no',  # 学员编号
+            'name',  # '学员姓名'
             'username',  # "登录账号"
             'password',  # "登录密码"
             'department_id',  # "所属部门"
-            'employee_position',  # "员工职务"
-            'role',  # "员工类别"
+            'employee_position',  # "学员职务"
+            'role',  # "学员类别"
             'info',  # "个性化信息"
             'TrainManager'  # "培训管辖部门"
         ]  # 用户表关键字
@@ -142,11 +149,11 @@ class ExcelfileUploadView(CreateAPIView):
                 user.set_password(password)  # 密码转码
                 user.save()
                 count += 1
-                if role == '1':
-                    # administrator= User.id  # 去数据库查询到role=1的用户ID
-                    department = Department.objects.get(slug=TrainManager)
-                    manageroftringgroup = TrainManagerPermission(administrator=user, department=department)
-                    manageroftringgroup.save()
+                # if role == '培训管理员':
+                #     # administrator= User.id  # 去数据库查询到role=1的用户ID
+                #     department = Department.objects.get(slug=TrainManager)
+                #     department.trainmanager = user
+                #     department.save()
 
         return count, importid
 
@@ -161,7 +168,7 @@ class LoginView(GenericAPIView):
     Accept the following POST parameters: username, password
     Return the REST Framework Token Object's key.
     """
-
+    renderer_classes = (EmberJSONRenderer,)
     permission_classes = (AllowAny,)
     serializer_class = LoginSerializer
     token_model = TokenModel
@@ -206,8 +213,7 @@ class LoginView(GenericAPIView):
         else:
 
             data = {
-                'role': self.user.role,
-                'role_display': self.user.get_role_display(),
+                'roles': self.user.roles,
                 'key': self.token
             }
             serializer = serializer_class(instance=data,
@@ -265,7 +271,7 @@ class LogoutView(APIView):
                         status=status.HTTP_200_OK)
 
 
-class UserDetailsView(RetrieveUpdateAPIView):
+class AccountDetailView(RetrieveUpdateAPIView):
     """
     Reads and updates UserModel fields
     Accepts GET, PUT, PATCH methods.
@@ -276,8 +282,10 @@ class UserDetailsView(RetrieveUpdateAPIView):
 
     Returns UserModel fields.
     """
-    serializer_class = UserDetailsSerializer
-    permission_classes = (IsAuthenticated,)
+    # roles_filterbackends = [IsOwnerFilterBackend]
+    # filter_backends = [RoleFilterBackend]
+    serializer_class = AccountInfoDetailsSerializer
+    permission_classes = [IsAuthenticated]
     parser_classes = (MultiPartParser,)
     renderer_classes = (EmberJSONRenderer,)
 
@@ -305,7 +313,7 @@ class UserAvatarView(CreateAPIView):
     Returns UserModel fields.
     """
     serializer_class = UserAvtarSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [IsOwnerFilterBackend]
     parser_classes = (MultiPartParser,)
     renderer_classes = (EmberJSONRenderer,)
 
@@ -346,7 +354,7 @@ role = openapi.Parameter('role',
 
 
 @method_decorator(name='list', decorator=swagger_auto_schema(manual_parameters=[importid, role]))
-class UserListView(ReadOnlyModelViewSet):
+class UserView(RoleFilterMixViewSet, ModelViewSet):
 
     """
         sysadmin
@@ -354,10 +362,18 @@ class UserListView(ReadOnlyModelViewSet):
         employee
         importid
     """
+    roles_filterbackends = [IsManagerFilterBackend]
+    filter_backends = [RoleFilterBackend]
     renderer_classes = (EmberJSONRenderer,)
     serializer_class = UserDetailsSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [RolePermission]
     pagination_class = ListPagination
+    queryset = get_user_model().objects.all()
+
+    def get_serializer_class(self):
+        if self.action == 'bulkdelete':
+            return UserListSerializer
+        return UserDetailsSerializer
 
     def get_queryset(self):
         """
@@ -367,17 +383,29 @@ class UserListView(ReadOnlyModelViewSet):
         importid
         """
         # 需要增加权限处理
-        # EMPLOYEE_ROLE_CHOICES = {'系统管理员': 0, '培训管理员': 1, '员工': 2}
+        # EMPLOYEE_ROLE_CHOICES = {'系统管理员': 0, '培训管理员': 1, '学员': 2}
         role = self.request.query_params.get('role', None)
         # role = EMPLOYEE_ROLE_CHOICES.get(role, None)
         if role:
-            queryset = get_user_model().objects.filter(role=role)
+            queryset = get_user_model().objects.filter(roles__name=role)
         else:
             queryset = get_user_model().objects.all()
         importid = self.request.query_params.get('importid', None)
         if importid is not None:
             queryset = queryset.filter(importid=importid)
         return queryset
+
+    @action(detail=False, methods=['PATCH'], name='bulk delete users')
+    def bulkdelete(self, request, *args, **kwargs):
+        """
+        批量删除用户
+
+        """
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.deleteusers()
+
+        return Response({'status': 'ok'})
 
 
 class PasswordResetView(GenericAPIView):
@@ -436,7 +464,7 @@ class PasswordChangeView(GenericAPIView):
     Returns the success/fail message.
     """
     serializer_class = PasswordChangeSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAuthenticated]
 
     @sensitive_post_parameters_m
     def dispatch(self, *args, **kwargs):

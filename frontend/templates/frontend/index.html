@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <!-- <title>Ant Design Pro</title> -->
+        <title>{% block title %}
+
+
+        {{ title }}
+
+        {% endblock %}</title>
+        {% comment %} {% include "admin_interface/favicon.html" %} {% endcomment %}
+        <link rel="stylesheet" type="text/css" href="{% block stylesheet_1 %}{% static "frontend/umi.css" %}{% endblock %}">
+
+        <link rel="icon" href="{% static 'frontend/favicon.png' %}" type="image/x-icon">
+        <script>
+            window.routerBase = "/front";
+            {% comment %} window.publicPath = "/front/"; {% endcomment %}
+        </script>
+    </head>
+    <body>
+        <div id="root"></div>
+
+        {% load static %}
+        <script src="{% static "frontend/umi.js" %}"></script>
+    </body>
+</html>
+

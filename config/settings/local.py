@@ -40,7 +40,9 @@ EMAIL_HOST = env('EMAIL_HOST', default='mailhog')
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-port
 EMAIL_PORT = 1025
 # django allow all cors
+CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_REPLACE_HTTPS_REFERER = True
 CORS_ALLOW_METHODS = (
     'DELETE',
     'GET',
@@ -48,7 +50,7 @@ CORS_ALLOW_METHODS = (
     'PATCH',
     'POST',
     'PUT',
-    'VIEW',
+    # 'VIEW',
 )
 
 CORS_ALLOW_HEADERS = (
@@ -64,7 +66,11 @@ CORS_ALLOW_HEADERS = (
     'x-requested-with',
     'Pragma',
 )
+# CORS_ORIGIN_WHITELIST = [
 
+#     "http://localhost:8080",
+#     "http://127.0.0.1:9000"
+# ]
 # django-debug-toolbar
 # ------------------------------------------------------------------------------
 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#prerequisites
@@ -79,7 +85,7 @@ DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TEMPLATE_CONTEXT': True,
 }
 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#internal-ips
-INTERNAL_IPS = ['127.0.0.1']
+INTERNAL_IPS = ['127.0.0.1', 'localhost']
 if env('USE_DOCKER') == 'yes':
     import socket
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
