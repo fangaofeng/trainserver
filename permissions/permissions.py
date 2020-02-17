@@ -103,7 +103,7 @@ class RolePermission(BasePermission):
     def _get_roles_Operation(self, user_obj):
         user_roles_field = get_user_model()._meta.get_field('roles')
         user_roles_query = 'roles__%s' % user_roles_field.related_query_name()
-        return Operation.objects.filter(**{user_roles_query: user_obj})
+        return Operation.objects.filter(**{user_roles_query: user_obj})   # 优化为启动后直接cache
 
     def get_all_Operation(self, user_obj):
         """

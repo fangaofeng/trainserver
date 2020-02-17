@@ -29,6 +29,14 @@
   ],
   "python.linting.pylintEnabled": false,
   "python.linting.maxNumberOfProblems": 120,
-  "python.dataScience.jupyterServerURI": "http://localhost:8888/?token=89fd33390231e9491735e11fb5d4c99cf8f424b8daf30200"
+  // "python.dataScience.jupyterServerURI": "http://localhost:8888/?token=89fd33390231e9491735e11fb5d4c99cf8f424b8daf30200",
   // "python.dataScience.jupyterServerURI": " http://localhost:8888/?token=f531df223a9f3eff6606e2dc59a56062485ecefcccf28892"
+  "files.associations": {
+    "**/templates/*.html": "django-html",
+    "**/templates/*": "django-txt",
+    "**/requirements{/**,*}.{txt,in}": "pip-requirements"
+  },
+  "emmet.includeLanguages": {
+    "django-html": "html"
+  }
 }

@@ -217,37 +217,6 @@ class PublicLearnProgressViewSet(CreateRetrieveListUpdateViewSet):
     # # filter_backends = (DjangoFilterBackend,)
     # filterset_class = progressFilter
 
-    # def get_object(self):
-    #     """
-    #     Returns the object the view is displaying.
-
-    #     You may want to override this if you need to provide non-standard
-    #     queryset lookups.  Eg if objects are referenced using multiple
-    #     keyword arguments in the url conf.
-    #     """
-    #     queryset = self.filter_queryset(self.get_queryset())
-
-    #     # Perform the lookup filtering.
-    #     lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
-
-    #     assert lookup_url_kwarg in self.kwargs, (
-    #         'Expected view %s to be called with a URL keyword argument '
-    #         'named "%s". Fix your URL conf, or set the `.lookup_field` '
-    #         'attribute on the view correctly.' %
-    #         (self.__class__.__name__, lookup_url_kwarg)
-    #     )
-
-    #     filter_kwargs = {self.lookup_field: self.kwargs[lookup_url_kwarg]}
-
-    #     try:
-    #         obj = get_object_or_404(queryset, *filter_args, **filter_kwargs)
-    #     except (TypeError, ValueError, ValidationError):
-    #         raise Http404
-
-    #     self.check_object_permissions(self.request, obj)
-
-    #     return obj
-
     def get_serializer_class(self):
         if self.action == 'retrieve' or self.action == 'list':
             return PublicLearnProgressReadonlySerializer
@@ -255,9 +224,11 @@ class PublicLearnProgressViewSet(CreateRetrieveListUpdateViewSet):
         return super(PublicLearnProgressViewSet, self).get_serializer_class()
 
     def get_queryset(self):
+        if self.request.user.is_authenticated:
+            queryset = PublicLearnProgress.objects.filter(creater=self.request.user).order_by('-created')
+        else:
+            queryset = PublicLearnProgress.objects.none()
 
-        user = self.request.user
-        queryset = PublicLearnProgress.objects.filter(creater=user).order_by('-created')
         return queryset
 
     def create(self, request, *args, **kwargs):

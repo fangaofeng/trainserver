@@ -10,7 +10,7 @@ from rest_framework.authentication import TokenAuthentication
 from django.contrib.admin import site
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 # from dashing.utils import router
-from controlcenter.views import controlcenter
+# from controlcenter.views import controlcenter
 urlpatterns_api = [
     path("", include('users.urls')),
     path("train/", include('traingroup.urls')),
@@ -29,31 +29,13 @@ urlpatterns_api = [
 
     path("config/", include('admin_interface.urls'))
 ]
-# urlpatterns_api=[
-# path("api/", include(('users.urls', 'user'), namespace='api')),
-# path("api/train/", include(('traingroup.urls', 'traingroup'), namespace='api')),
 
-# path("api/orgs/", include(('orgs.urls', 'org'), namespace='api')),
-# path("api/learn/", include(('learn.urls', 'learn'), namespace='api')),
-# path("api/", include(('exampaper.urls', 'paper'), namespace='api')),
-# path("api/exam/", include(('examplan.urls', 'examplan'), namespace='api')),
-# path("api/course/", include(('course.urls', 'course'), namespace='api')),
-# path("api/", include(('notifications.urls', 'notify'), namespace='api')),
-
-# path("api/blog/", include(('blog.urls', 'blog'), namespace='api')),
-# # path("api/upload/", include(('uploadfile.urls','upload'), namespace='api')),
-# path("api/", include(('mystatistics.urls', 'statistics'), namespace='api')),
-# # path("api/geo/", include(('geo.urls','geo'), namespace='api')),
-
-# path("api/config/", include(('admin_interface.urls', 'config'), namespace='api'))
-# ]
 urlpatterns = [
-    # path('admin_tools/', include('admin_tools.urls')),
     # path('dashboard/', include(router.urls)),
     # path(settings.ADMIN_URL, include('admin_honeypot.urls', namespace='admin_honeypot')),
     # path('secret/', admin.site.urls),
-    path(settings.ADMIN_URL+'timeline', include('admin_timeline.urls')),
-    path(settings.ADMIN_URL, admin.site.urls),
+    # path(settings.ADMIN_URL+'timeline', include('admin_timeline.urls')),
+    # path(settings.ADMIN_URL, admin.site.urls),
     path(settings.FRONT_END_PREFIX, include(('frontend.urls', 'frontend'), namespace='front')),
     path(settings.REST_API_PREFIX, include((urlpatterns_api, 'api'), namespace='api'))
     # api start
@@ -64,6 +46,18 @@ urlpatterns = [
     settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += staticfiles_urlpatterns()
+# user secret admin url
+if hasattr(settings, 'SECRET_ADMIN_URL'):
+    urlpatterns += [
+        path(settings.ADMIN_URL, include('admin_honeypot.urls', namespace='admin_honeypot')),
+        path(settings.SECRET_ADMIN_URL, admin.site.urls),
+        path(settings.SECRET_ADMIN_URL+'timeline', include('admin_timeline.urls')),
+    ]
+else:
+    urlpatterns += [
+        path(settings.ADMIN_URL, admin.site.urls),
+        path(settings.ADMIN_URL+'timeline', include('admin_timeline.urls')),
+    ]
 
 if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit
@@ -109,12 +103,14 @@ if settings.DEBUG:
                     re_path(
                     'swagger(?P<format>\.json|\.yaml)$', schema_viewyasg.without_ui(cache_timeout=0),
                     name='schema-json'),
+
                     path("400/", default_views.bad_request, kwargs={"exception": Exception("Bad Request!")},),
                     path(
                     "403/", default_views.permission_denied, kwargs={"exception": Exception("Permission Denied")},),
                     path("404/", default_views.page_not_found, kwargs={"exception": Exception("Page not Found")},),
                     path("500/", default_views.server_error),
-                    path('admin/dashboard/', controlcenter.urls),
+                    # path('admin/dashboard/', controlcenter.urls),
+                    # path('nested_admin/', include('nested_admin.urls')),
                     # path('grappelli/', include('grappelli.urls')),  # grappelli URLS
                     # path('dashboard/', include('dash.urls')),
                     # django-dash RSS contrib plugin URLs:
@@ -123,12 +119,11 @@ if settings.DEBUG:
 
                     # django-dash public dashboards contrib app:
                     # path('', include('dash.contrib.apps.public_dashboard.urls')),
-                    path('nested_admin/', include('nested_admin.urls')),
+
                     ]
 
     if "debug_toolbar" in settings.INSTALLED_APPS:
-        # import debug_toolbar
+        import debug_toolbar
 
-        # urlpatterns += [path("__debug__/", include(debug_toolbar.urls))
-        #                 ]
-        pass
+        urlpatterns += [path("__debug__/", include(debug_toolbar.urls))
+                        ]

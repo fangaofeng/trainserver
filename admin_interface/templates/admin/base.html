@@ -19,6 +19,7 @@
     {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive_rtl.css" %}">{% endif %}
 
 {% endblock %}
+<link rel="stylesheet" type="text/css" href="{% block stylesheet_0 %}{% static "admin_interface/css/iconfont.css" %}{% endblock %}">
 <link rel="stylesheet" type="text/css" href="{% block stylesheet_1 %}{% static "admin_interface/css/jquery.mCustomScrollbar.min.css" %}{% endblock %}">
 <link rel="stylesheet" type="text/css" href="{% block stylesheet_2 %}{% static "admin_interface/css/sidebar-main.css" %}{% endblock %}">
 <link rel="stylesheet" type="text/css" href="{% block stylesheet_3 %}{% static "admin_interface/css/sidebar-themes.css" %}{% endblock %}">
@@ -182,13 +183,13 @@
                   {% for app in bdapp_list %}
                   {% if app.models  is NONE %}
                   <li class="sidebar-item  {% if app.active %} active {% endif %}">
-                    <a href="{{ app.app_url }}"><i class="fa fa-link"></i>{{app.name}}</a>
+                    <a href="{{ app.app_url }}"><i class="{{ app.app_icon}}"></i>{{app.name}}</a>
                   </li>
                   {% else %}
 
                   <li class="sidebar-dropdown {% if app.active %} active menu-open {% endif %}">
                     <a href="#">
-                        <i class="fa fa-tachometer-alt"></i>
+                        <i class="{{ app.app_icon}}"></i>
                         <span class="menu-text">{{ app.name }}</span>
 
                     </a>

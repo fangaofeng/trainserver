@@ -1,9 +1,27 @@
 [
   {
-    "model": "permissions.Role",
-    "pk": 1,
-    "fields": {
-      "label": "AnonymousUser"
-    }
+    "model": "permissions.role",
+    "pk": 2,
+    "fields": { "name": "stu", "display": "stu" }
+  },
+  {
+    "model": "permissions.role",
+    "pk": 3,
+    "fields": { "name": "tr", "display": "tr" }
+  },
+  {
+    "model": "permissions.role",
+    "pk": 4,
+    "fields": { "name": "test", "display": "2" }
+  },
+  {
+    "model": "permissions.role",
+    "pk": 5,
+    "fields": { "name": "admin", "display": "admin" }
+  },
+  {
+    "model": "permissions.role",
+    "pk": 6,
+    "fields": { "name": "trainmanager", "display": "trainmanager" }
   }
 ]

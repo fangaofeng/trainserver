@@ -10,6 +10,7 @@ from django.apps import AppConfig
 class PermissionsConfig(AppConfig):
     has_rest_api = True
     has_tests = True
+    icon = 'iconfont iconpermissions'
     name = 'permissions'
     verbose_name = _('permissions')
 

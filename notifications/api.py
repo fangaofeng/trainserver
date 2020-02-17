@@ -7,6 +7,7 @@ from django_filters.rest_framework import ChoiceFilter, DjangoFilterBackend, Fil
 from permissions.permissions import RolePermission
 from rest_framework import generics, status, viewsets
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import Notification, NotificationTask
 from .serializers import NotificationTaskSerializer, NotificationSerializer, NotificationTaskCreateSerializer
@@ -97,16 +98,31 @@ class NotificationViewSet(RetrieveListUpdateViewSet):
     queryset = Notification.objects.all().order_by('-created')
     serializer_class = NotificationSerializer
     # multiple_lookup_fields = ['level', 'unread']
-    permission_classes = [RolePermission]
+    permission_classes = [IsAuthenticated]
     filter_backends = [filters.backends.RestFrameworkFilterBackend]
     # filter_backends = [FilterSet]
     filterset_class = NotificationFilter
     # filterset_fields = ('unread',)
 
     def get_queryset(self):
-        self.queryset = Notification.objects.filter(recipient=self.request.user).order_by('-created')
+        if self.request.user.is_authenticated:
+            self.queryset = Notification.objects.filter(recipient=self.request.user).order_by('-created')
+        else:
+            self.queryset = Notification.objects.none()
         return super(NotificationViewSet, self).get_queryset()
 
+    @action(detail=False, methods=['PATCH'])
+    def clear(self, request, *args, **kwargs):
+        """
+        所用设为已读
+
+        """
+        renderer_classes = (EmberJSONRenderer,)
+        # serializer = self.get_serializer(data=request.data)
+        # serializer.is_valid(raise_exception=True)
+        # serializer.bulkchangestatus()
+        Notification.objects.mark_all_as_unread(recipient=self.request.user)
+        return Response(data={'count': 0}, status=status.HTTP_200_OK)
     # def get_serializer_class(self):
     #     if self.action == 'create':
     #         return NotificationCreateSerializer

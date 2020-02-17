@@ -100,9 +100,15 @@ def get_app_list(request):
         app_dict = app_list[i]
         app_label = app_dict['app_label']
         app_config = apps.get_app_config(app_label)
-        app_icon = 'fa fa-link'
+        app_icon = 'iconfont icondefault'
         if hasattr(app_config, 'icon'):
             app_icon = app_config.icon
+        if app_label == 'authtoken':
+            app_icon = 'iconfont iconauth'
+        if app_label == 'auth':
+            app_icon = 'iconfont iconauthenticationbg'
+        if app_label == 'sites':
+            app_icon = 'iconfont iconzhandianpeizhi'
 
         app_dict.update({
             'app_icon': mark_safe(app_icon),
@@ -137,7 +143,7 @@ def get_app_list(request):
     adminindex = {
         'name': 'home',
         'app_label': 'home',
-        'app_icon': 'fa fa-link',
+        'app_icon': 'iconfont icon-Workbench2',
         'app_url': adminindex_url,
         'active': False,
     }

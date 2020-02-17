@@ -5,6 +5,7 @@ from django.apps import AppConfig
 
 class notificationsConfig(AppConfig):
     name = "notifications"
+    icon = 'iconfont icontongzhi1'
 
     def ready(self):
         super(notificationsConfig, self).ready()

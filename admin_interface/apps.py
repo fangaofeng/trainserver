@@ -9,6 +9,7 @@ class AdminInterfaceConfig(AppConfig):
 
     name = 'admin_interface'
     verbose_name = _('Admin Interface')
+    icon = 'iconfont icon-shezhi'
 
     def ready(self):
 

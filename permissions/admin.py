@@ -55,8 +55,8 @@ class RoleOperationshipWithFilterAdminFormInline(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if not hasattr(self.instance, 'operation'):
-            print(self.instance)
+        # if not hasattr(self.instance, 'operation'):
+        #     print(self.instance)
         if self.instance and hasattr(self.instance, 'operation'):
             self.fields['filters'].queryset = RoleFilterBackendModel.objects.filter(operation=self.instance.operation)
             # self.fields['id'].initial = self.instance.id

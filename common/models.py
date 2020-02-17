@@ -21,5 +21,5 @@ class CreaterTimeStampedModel(TimeStampedModel):
 
     class Meta:
         get_latest_by = 'modified'
-        ordering = ('-modified', '-created',)
+        ordering = ['-modified', '-created']
         abstract = True

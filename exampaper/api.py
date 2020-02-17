@@ -36,7 +36,7 @@ class ExamPaPerViewSet(viewsets.ModelViewSet):
     """
     pagination_class = ListPagination
     renderer_classes = (EmberJSONRenderer,)
-    queryset = ExamPaPer.objects.all()
+    queryset = ExamPaPer.objects.all().order_by('-modified')
     serializer_class = ExamPaPerSerializer
     permission_classes = [RolePermission]
     roles_filterbackends = [IsManagerFilterBackend]

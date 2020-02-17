@@ -1,0 +1,1152 @@
+[
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 625,
+    "fields": {
+      "role": "admin",
+      "operation": "blog_article_create",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 626,
+    "fields": {
+      "role": "admin",
+      "operation": "blog_article_destroy",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 627,
+    "fields": {
+      "role": "admin",
+      "operation": "blog_article_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 628,
+    "fields": {
+      "role": "admin",
+      "operation": "blog_article_partial_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 629,
+    "fields": {
+      "role": "admin",
+      "operation": "blog_article_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 630,
+    "fields": {
+      "role": "admin",
+      "operation": "blog_article_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 631,
+    "fields": {
+      "role": "admin",
+      "operation": "course_type_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 632,
+    "fields": {
+      "role": "admin",
+      "operation": "course_type_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 633,
+    "fields": {
+      "role": "admin",
+      "operation": "course_upload_create",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 634,
+    "fields": {
+      "role": "admin",
+      "operation": "course_ware_create",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 635,
+    "fields": {
+      "role": "admin",
+      "operation": "course_ware_destroy",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 636,
+    "fields": {
+      "role": "admin",
+      "operation": "course_ware_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 637,
+    "fields": {
+      "role": "admin",
+      "operation": "course_ware_partial_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 638,
+    "fields": {
+      "role": "admin",
+      "operation": "course_ware_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 639,
+    "fields": {
+      "role": "admin",
+      "operation": "course_ware_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 640,
+    "fields": {
+      "role": "admin",
+      "operation": "notices_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 641,
+    "fields": {
+      "role": "admin",
+      "operation": "notices_partial_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 642,
+    "fields": {
+      "role": "admin",
+      "operation": "notices_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 643,
+    "fields": {
+      "role": "admin",
+      "operation": "notices_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 644,
+    "fields": {
+      "role": "admin",
+      "operation": "noticetask_create",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 645,
+    "fields": {
+      "role": "admin",
+      "operation": "noticetask_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 646,
+    "fields": {
+      "role": "admin",
+      "operation": "noticetask_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 647,
+    "fields": {
+      "role": "admin",
+      "operation": "orgs_departments_create",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 648,
+    "fields": {
+      "role": "admin",
+      "operation": "orgs_departments_destroy",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 649,
+    "fields": {
+      "role": "admin",
+      "operation": "orgs_departments_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 650,
+    "fields": {
+      "role": "admin",
+      "operation": "orgs_departments_partial_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 651,
+    "fields": {
+      "role": "admin",
+      "operation": "orgs_departments_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 652,
+    "fields": {
+      "role": "admin",
+      "operation": "orgs_departments_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 653,
+    "fields": {
+      "role": "admin",
+      "operation": "orgs_upload_create",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 654,
+    "fields": {
+      "role": "admin",
+      "operation": "paper_create",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 655,
+    "fields": {
+      "role": "admin",
+      "operation": "paper_destroy",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 656,
+    "fields": {
+      "role": "admin",
+      "operation": "paper_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 657,
+    "fields": {
+      "role": "admin",
+      "operation": "paper_partial_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 658,
+    "fields": {
+      "role": "admin",
+      "operation": "paper_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 659,
+    "fields": {
+      "role": "admin",
+      "operation": "paper_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 660,
+    "fields": {
+      "role": "admin",
+      "operation": "paper_upload_create",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 661,
+    "fields": {
+      "role": "admin",
+      "operation": "stats_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 662,
+    "fields": {
+      "role": "admin",
+      "operation": "user_bulkdelete",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 663,
+    "fields": {
+      "role": "admin",
+      "operation": "user_create",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 664,
+    "fields": {
+      "role": "admin",
+      "operation": "user_destroy",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 665,
+    "fields": {
+      "role": "admin",
+      "operation": "user_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 666,
+    "fields": {
+      "role": "admin",
+      "operation": "user_partial_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 667,
+    "fields": {
+      "role": "admin",
+      "operation": "user_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 668,
+    "fields": {
+      "role": "admin",
+      "operation": "user_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 669,
+    "fields": {
+      "role": "admin",
+      "operation": "user_upload_create",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 670,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "blog_article_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 671,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "blog_article_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 672,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "course_ware_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [360]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 673,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "course_ware_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [362]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 674,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "exam_plan_create",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [370]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 675,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "exam_plan_destroy",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [407]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 676,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "exam_plan_group_member_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [357]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 677,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "exam_plan_groups_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [356]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 678,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "exam_plan_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [350]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 679,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "exam_plan_partial_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [398]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 680,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "exam_plan_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [351]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 681,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "exam_plan_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [382]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 682,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "exam_progress_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [352]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 683,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "exam_progress_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [354]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 684,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "learn_plan_create",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [368]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 685,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "learn_plan_group_member_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [347]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 686,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "learn_plan_groups_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [346]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 687,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "learn_plan_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [340]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 688,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "learn_plan_partial_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [394]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 689,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "learn_plan_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [341]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 690,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "learn_plan_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [378]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 691,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "learn_progress_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [342]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 692,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "learn_progress_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [344]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 693,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "notices_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 694,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "notices_partial_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 695,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "notices_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 696,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "notices_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 697,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "noticetask_create",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 698,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "noticetask_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 699,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "noticetask_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 700,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "orgs_departments_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [337]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 701,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "orgs_departments_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [339]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 702,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "train_group_bulkdelete",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [389]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 703,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "train_group_create",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [365]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 704,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "train_group_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [333]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 705,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "train_group_members_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [335]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 706,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "train_group_members_partial_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [391]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 707,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "train_group_members_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [375]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 708,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "train_group_partial_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [390]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 709,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "train_group_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [334]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 710,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "train_group_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [374]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 711,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "user_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [331]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 712,
+    "fields": {
+      "role": "trainmanager",
+      "operation": "user_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [332]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 713,
+    "fields": {
+      "role": "stu",
+      "operation": "blog_article_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 714,
+    "fields": {
+      "role": "stu",
+      "operation": "blog_article_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 715,
+    "fields": {
+      "role": "stu",
+      "operation": "course_ware_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [361]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 716,
+    "fields": {
+      "role": "stu",
+      "operation": "course_ware_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [363]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 717,
+    "fields": {
+      "role": "stu",
+      "operation": "exam_aggregation_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 718,
+    "fields": {
+      "role": "stu",
+      "operation": "exam_progress_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [352]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 719,
+    "fields": {
+      "role": "stu",
+      "operation": "exam_progress_partial_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [400]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 720,
+    "fields": {
+      "role": "stu",
+      "operation": "exam_progress_questions_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [359]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 721,
+    "fields": {
+      "role": "stu",
+      "operation": "exam_progress_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 722,
+    "fields": {
+      "role": "stu",
+      "operation": "exam_progress_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [384]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 723,
+    "fields": {
+      "role": "stu",
+      "operation": "learn_aggregation_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 724,
+    "fields": {
+      "role": "stu",
+      "operation": "learn_progress_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [343]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 725,
+    "fields": {
+      "role": "stu",
+      "operation": "learn_progress_partial_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [396]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 726,
+    "fields": {
+      "role": "stu",
+      "operation": "learn_progress_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [344]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 727,
+    "fields": {
+      "role": "stu",
+      "operation": "learn_progress_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [380]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 728,
+    "fields": {
+      "role": "stu",
+      "operation": "learn_publicprogress_create",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 729,
+    "fields": {
+      "role": "stu",
+      "operation": "learn_publicprogress_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 730,
+    "fields": {
+      "role": "stu",
+      "operation": "learn_publicprogress_partial_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 731,
+    "fields": {
+      "role": "stu",
+      "operation": "learn_publicprogress_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 732,
+    "fields": {
+      "role": "stu",
+      "operation": "learn_publicprogress_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 733,
+    "fields": {
+      "role": "stu",
+      "operation": "notices_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 734,
+    "fields": {
+      "role": "stu",
+      "operation": "notices_partial_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 735,
+    "fields": {
+      "role": "stu",
+      "operation": "notices_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 736,
+    "fields": {
+      "role": "stu",
+      "operation": "notices_update",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 737,
+    "fields": {
+      "role": "stu",
+      "operation": "orgs_departments_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": [419]
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 738,
+    "fields": {
+      "role": "stu",
+      "operation": "train_group_list",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  },
+  {
+    "model": "permissions.roleoperationshipwithfilter",
+    "pk": 739,
+    "fields": {
+      "role": "stu",
+      "operation": "train_group_retrieve",
+      "description": "\u6ca1\u6709\u63cf\u8ff0",
+      "filters": []
+    }
+  }
+]

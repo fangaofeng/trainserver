@@ -153,3 +153,15 @@ class NotificationSerializer(serializers.ModelSerializer):
         model = Notification
         fields = ('id', 'task', 'unread', 'emailed', 'created')
         read_only_fields = ('id', 'task', 'emailed', 'created')
+
+
+class NotificationListSerializer(serializers.Serializer):
+
+    notifications = serializers.PrimaryKeyRelatedField(required=True, many=True, queryset=Notification.objects.all())
+
+    class Meta:
+        fields = ['notifications']
+
+    def bulkchangestatus(self):
+        for notification in self.validated_data['notifications']:
+            notification.save()

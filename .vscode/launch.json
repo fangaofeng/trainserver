@@ -63,6 +63,13 @@
       "request": "launch",
       "program": "${file}",
       "console": "externalTerminal"
+    },
+    {
+      "name": "DjangoExtension",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "args": ["--extensionDevelopmentPath=${workspaceFolder}"]
     }
   ]
 }

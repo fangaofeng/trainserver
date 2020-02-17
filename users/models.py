@@ -51,24 +51,6 @@ class User(AbstractUser, RestPermissionsMixin):
 
     employee_position = models.CharField(_('employee position'), max_length=50, blank=True)
     info = models.CharField(_('user info'), max_length=150, blank=True)
-    # EMPLOYEE_ROLE_CHOICES = (
-    #     (0, '系统管理员'),
-    #     (1, '培训管理员'),
-    #     (2, '学员')
-
-    # )
-    # EMPLOYEE_ROLE_CHOICES = Choices('系统管理员', '培训管理员', '学员')
-    # roles = models.CharField(
-
-    #     choices=EMPLOYEE_ROLE_CHOICES,
-    #     default='学员',
-    #     null=False,
-    #     blank=False,
-    #     max_length=20,
-    #     help_text="学员类别"
-    # )
-    # roles = models.ForeignKey(on_delete=models.CASCADE, related_name='user', to_field='name',
-    #                           to='permissions.Role', blank=True,  verbose_name=_('roles'), default='AnonymousUser')
 
     block_password_change = models.BooleanField(
         default=False,

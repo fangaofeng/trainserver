@@ -44,7 +44,7 @@ DATABASES = {
 
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
-
+# DATABASES['default']['CONN_MAX_AGE'] = 60
 # URLS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#root-urlconf
@@ -55,7 +55,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # APPS
 # ------------------------------------------------------------------------------
 DJANGO_APPS = [
-    'corsheaders',
+
     # 'fluent_dashboard',
     # 'admin_tools',
     # 'admin_tools.theming',
@@ -68,7 +68,6 @@ DJANGO_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    # 'debug_toolbar',
     # 'django.contrib.humanize', # Handy template tags
     # 'bdadmin',
     # 'grappelli',
@@ -107,7 +106,9 @@ THIRD_PARTY_APPS = [
     # 'captcha',  验证码
     # 'easy_thumbnails',
     # 'image_cropping',  图片剪切
-    'admin_honeypot',
+
+    'cacheops',
+    # 'cachalot',
     'django_json_widget',
     'mptt',
     'import_export',
@@ -171,42 +172,8 @@ AUTH_USER_MODEL = 'users.User'
 # LOGIN_REDIRECT_URL = 'users:redirect'
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
 # LOGIN_URL = 'account_login'
-REST_USE_JWT = False
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication'
-    ),
-    'UPLOADED_FILES_USE_URL': True,
-    'DATE_FORMAT': '%Y-%m-%d',
-
-    'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S',
-
-    'TIME_FORMAT': '%H:%M:%S'
 
 
-}
-"""
-DATETIME_INPUT_FORMATS = (
-    '%Y-%m-%d %H:%M:%S',  # '2006-10-25 14:30:59'
-    '%Y-%m-%dT%H:%M:%S',  # '2006-10-25 14:30:59'
-    '%Y-%m-%d %H:%M:%S.%f',  # '2006-10-25 14:30:59.000200'
-    '%Y-%m-%d %H:%M',  # '2006-10-25 14:30'
-    '%Y-%m-%d',  # '2006-10-25'
-    '%m/%d/%Y %H:%M:%S',  # '10/25/2006 14:30:59'
-    '%m/%d/%Y %H:%M:%S.%f',  # '10/25/2006 14:30:59.000200'
-    '%m/%d/%Y %H:%M',  # '10/25/2006 14:30'
-    '%m/%d/%Y',  # '10/25/2006'
-    '%m/%d/%y %H:%M:%S',  # '10/25/06 14:30:59'
-    '%m/%d/%y %H:%M:%S.%f',  # '10/25/06 14:30:59.000200'
-    '%m/%d/%y %H:%M',  # '10/25/06 14:30'
-    '%m/%d/%y',  # '10/25/06'
-    '%b %d %y',  # 'Oct 25 06'
-    '%b %d %Y',  # 'Oct 25 2006'
-    '%b %d %Y %I:%M%p',  # 'Oct 25 2006'
-)
-"""
 # PASSWORDS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#password-hashers
@@ -239,19 +206,18 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
 
-    'corsheaders.middleware.CorsMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
 
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'corsheaders.middleware.CorsPostCsrfMiddleware',
+    # 'corsheaders.middleware.CorsPostCsrfMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'mystatistics.VisitTimesMiddleware.VisitTimes',
     'simple_history.middleware.HistoryRequestMiddleware',
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware'
 
 ]
 
@@ -315,6 +281,8 @@ TEMPLATES = [
         },
     },
 ]
+# https://docs.djangoproject.com/en/dev/ref/settings/#form-renderer
+# FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 # http://django-crispy-forms.readthedocs.io/en/latest/install.html#template-packs
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -324,14 +292,23 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 FIXTURE_DIRS = (
     str(APPS_DIR.path('fixtures')),
 )
-
+# SECURITY
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#session-cookie-httponly
+SESSION_COOKIE_HTTPONLY = True
+# https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-httponly
+CSRF_COOKIE_HTTPONLY = True
+# https://docs.djangoproject.com/en/dev/ref/settings/#secure-browser-xss-filter
+SECURE_BROWSER_XSS_FILTER = True
+# https://docs.djangoproject.com/en/dev/ref/settings/#x-frame-options
+X_FRAME_OPTIONS = "DENY"
 # EMAIL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
-# prefix url
-FRONT_END_PREFIX = 'frond/'
-REST_API_PREFIX = 'api/'
+# https://docs.djangoproject.com/en/2.2/ref/settings/#email-timeout
+EMAIL_TIMEOUT = 5
+
 # ADMIN
 # ------------------------------------------------------------------------------
 # Django Admin URL.
@@ -343,7 +320,29 @@ ADMINS = [
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
-
+# LOGGING
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#logging
+# See https://docs.djangoproject.com/en/dev/topics/logging for
+# more details on how to customize your logging configuration.
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "%(levelname)s %(asctime)s %(module)s "
+            "%(process)d %(thread)d %(message)s"
+        }
+    },
+    "handlers": {
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        }
+    },
+    "root": {"level": "INFO", "handlers": ["console"]},
+}
 # Celery
 # ------------------------------------------------------------------------------
 INSTALLED_APPS += ['taskapp.celery.CeleryAppConfig']
@@ -366,6 +365,9 @@ CELERYD_TASK_TIME_LIMIT = 5 * 60
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-soft-time-limit
 # TODO: set to whatever value is adequate in your circumstances
 CELERYD_TASK_SOFT_TIME_LIMIT = 60
+# http://docs.celeryproject.org/en/latest/userguide/configuration.html#beat-scheduler
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
 # django-allauth
 """
 # ------------------------------------------------------------------------------
@@ -382,26 +384,51 @@ ACCOUNT_ADAPTER = 'whlrest.users.adapters.AccountAdapter'
 SOCIALACCOUNT_ADAPTER = 'whlrest.users.adapters.SocialAccountAdapter'
 
 """
-
+INSTALLED_APPS += ["compressor"]
+STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
 # Your stuff...
-# ------------------------------------------------------------------------------
-VALI_CONFIG = {
-    # the vali-admin themes  default, blue, purple, green,brown
-    'theme': 'default',
-    'dashboard': {'name': 'Dashboard', 'url': '/admin/'},
-    # the order for applist  default, registry
-    # display applist by group: True
-    #  e.g. {group: True}
-    # default check decorators  vali.decorator.vali_models_group on ModelAdmin
-    #  * otherwize use group_marker in verbose_name_plural, (will be deprecated in future version 0.2.0)*
-    #  * e.g.  {group: True, group_marker : '-'}
-    #    verbose_name_plural = system-user
-    #  * display the model "user" in group "system"
-    'applist': {"order": "registry", "group": True},
-    # default: //maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css
-    # 'font_awesome_url': '/local/path/to/font-awesome-4.7.0/css/font-awesome.min.css',
-}
+# django-reset-framework
+# -------------------------------------------------------------------------------
+# django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
 
+FRONT_END_PREFIX = 'front/'
+REST_API_PREFIX = 'api/'
+REST_USE_JWT = False
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication'
+    ),
+    'UPLOADED_FILES_USE_URL': True,
+    'DATE_FORMAT': '%Y-%m-%d',
+
+    'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S',
+
+    'TIME_FORMAT': '%H:%M:%S'
+
+
+}
+"""
+DATETIME_INPUT_FORMATS = (
+    '%Y-%m-%d %H:%M:%S',  # '2006-10-25 14:30:59'
+    '%Y-%m-%dT%H:%M:%S',  # '2006-10-25 14:30:59'
+    '%Y-%m-%d %H:%M:%S.%f',  # '2006-10-25 14:30:59.000200'
+    '%Y-%m-%d %H:%M',  # '2006-10-25 14:30'
+    '%Y-%m-%d',  # '2006-10-25'
+    '%m/%d/%Y %H:%M:%S',  # '10/25/2006 14:30:59'
+    '%m/%d/%Y %H:%M:%S.%f',  # '10/25/2006 14:30:59.000200'
+    '%m/%d/%Y %H:%M',  # '10/25/2006 14:30'
+    '%m/%d/%Y',  # '10/25/2006'
+    '%m/%d/%y %H:%M:%S',  # '10/25/06 14:30:59'
+    '%m/%d/%y %H:%M:%S.%f',  # '10/25/06 14:30:59.000200'
+    '%m/%d/%y %H:%M',  # '10/25/06 14:30'
+    '%m/%d/%y',  # '10/25/06'
+    '%b %d %y',  # 'Oct 25 06'
+    '%b %d %Y',  # 'Oct 25 2006'
+    '%b %d %Y %I:%M%p',  # 'Oct 25 2006'
+)
+"""
 # 流量控制
 # REST_FRAMEWORK = {
 #     'DEFAULT_THROTTLE_CLASSES': [
@@ -416,18 +443,9 @@ VALI_CONFIG = {
 #         # 'uploads': '30/day'
 #     }
 # }
+# ------------------------------------------------------------------------------
+# Your stuff...
 DJANGO_NOTIFICATIONS_CONFIG = {'SOFT_DELETE': True}
-# simpui
-SIMPLEUI_ANALYSIS = False
-
-
-# CONTROLCENTER_DASHBOARDS = (
-#     ('mydash', 'dashboards.MyDashboard'),
-# )
-# ADMIN_TOOLS_INDEX_DASHBOARD = 'fluent_dashboard.dashboard.FluentIndexDashboard'
-# ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'fluent_dashboard.dashboard.FluentAppIndexDashboard'
-# ADMIN_TOOLS_MENU = 'fluent_dashboard.menu.FluentMenu'
-
 
 # upload path
 UPLOAD_PATH = {
