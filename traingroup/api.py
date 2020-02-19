@@ -9,7 +9,7 @@ from django.http import Http404, HttpResponseNotFound
 from django.utils.decorators import method_decorator
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from permissions.filters import RoleFilterBackend, BOOLEAN_CHOICES, WhlRestFilterBackend
+from permissions.filters import RoleFilterBackend, BOOLEAN_CHOICES, trainserverFilterBackend
 from permissions.permissions import RolePermission
 from rest_framework import generics, status, viewsets
 from rest_framework.decorators import action
@@ -38,7 +38,7 @@ class TrainGroupViewSet(CreateRetrieveListUpdateViewSet):
     serializer_class = TrainGroupSerializer
     permission_classes = [RolePermission]
     roles_filterbackends = [IsManagerFilterBackend, IsOwnerFilterBackend]
-    filter_backends = [RoleFilterBackend, WhlRestFilterBackend]
+    filter_backends = [RoleFilterBackend, trainserverFilterBackend]
 
     # def get_queryset(self):
     #     user = self.request.user
@@ -138,7 +138,7 @@ class TrainGropMemberModifyViewSet(ListUpdateViewSet):
     serializer_class = TrainGropMemberListSerializer
     permission_classes = [RolePermission]
     roles_filterbackends = [IsManagerFilterBackend]
-    filter_backends = [RoleFilterBackend, WhlRestFilterBackend]
+    filter_backends = [RoleFilterBackend, trainserverFilterBackend]
     lookup_url_kwarg = 'groupid'
     filterset_class = TrainGropMemberFilterSet
     # def get_queryset(self):

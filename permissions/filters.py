@@ -1,9 +1,7 @@
-
-
 from rest_framework.filters import BaseFilterBackend
 from permissions.models import RoleFilterBackendModel, RoleOperationshipWithFilter
 import warnings
-import rest_framework_filters as filters
+from rest_framework_filters.backends import RestFrameworkFilterBackend
 # from django_filters import rest_framework as filters
 from orgs.models import Department
 from rest_framework.settings import api_settings
@@ -12,7 +10,7 @@ from django.contrib.auth import get_user_model
 BOOLEAN_CHOICES = (('false', 'False'), ('true', 'True'),)
 
 
-class WhlRestFilterBackend(filters.backends.RestFrameworkFilterBackend):
+class trainserverFilterBackend(RestFrameworkFilterBackend):
     # def get_filterset_kwargs(self, request, queryset, view):
     #     return {
     #         'data': request.query_params,

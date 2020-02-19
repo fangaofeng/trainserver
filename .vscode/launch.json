@@ -31,7 +31,6 @@
       "request": "launch",
       "program": "${workspaceFolder}/manage.py",
       "console": "integratedTerminal",
-      // "args": ["runserver_plus", "0.0.0.0:9000"],
       "args": ["runserver_plus", "0.0.0.0:9000", "--noreload", "--nothreading"],
       "justMyCode": false,
       "django": true

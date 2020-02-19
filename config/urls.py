@@ -1,3 +1,4 @@
+import os
 from rest_framework import permissions
 
 from django.conf import settings
@@ -31,11 +32,7 @@ urlpatterns_api = [
 ]
 
 urlpatterns = [
-    # path('dashboard/', include(router.urls)),
-    # path(settings.ADMIN_URL, include('admin_honeypot.urls', namespace='admin_honeypot')),
-    # path('secret/', admin.site.urls),
-    # path(settings.ADMIN_URL+'timeline', include('admin_timeline.urls')),
-    # path(settings.ADMIN_URL, admin.site.urls),
+
     path(settings.FRONT_END_PREFIX, include(('frontend.urls', 'frontend'), namespace='front')),
     path(settings.REST_API_PREFIX, include((urlpatterns_api, 'api'), namespace='api'))
     # api start
@@ -47,16 +44,17 @@ urlpatterns = [
 # urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += staticfiles_urlpatterns()
 # user secret admin url
-if hasattr(settings, 'SECRET_ADMIN_URL'):
+
+urlpatterns += [
+
+    path(settings.ADMIN_URL, admin.site.urls),
+    path(settings.ADMIN_URL+'timeline', include('admin_timeline.urls')),
+]
+print(settings.ADMIN_URL)
+
+if os.environ.get('DJANGO_SETTINGS_MODULE') == 'config.settings.production':
     urlpatterns += [
-        path(settings.ADMIN_URL, include('admin_honeypot.urls', namespace='admin_honeypot')),
-        path(settings.SECRET_ADMIN_URL, admin.site.urls),
-        path(settings.SECRET_ADMIN_URL+'timeline', include('admin_timeline.urls')),
-    ]
-else:
-    urlpatterns += [
-        path(settings.ADMIN_URL, admin.site.urls),
-        path(settings.ADMIN_URL+'timeline', include('admin_timeline.urls')),
+        path('admin/', include('admin_honeypot.urls', namespace='admin_honeypot'))
     ]
 
 if settings.DEBUG:

@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 volumes:
   local_postgres_data: {}
@@ -9,7 +9,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/local/django/Dockerfile
-    image: whlrest_local_django
+    image: trainserver_local_django
     depends_on:
       - postgres
       - mailhog
@@ -26,7 +26,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/production/postgres/Dockerfile
-    image: whlrest_production_postgres
+    image: trainserver_production_postgres
     volumes:
       - local_postgres_data:/var/lib/postgresql/data
       - local_postgres_data_backups:/backups
@@ -43,7 +43,7 @@ services:
 
   celeryworker:
     <<: *django
-    image: whlrest_local_celeryworker
+    image: trainserver_local_celeryworker
     depends_on:
       - redis
       - postgres
@@ -53,7 +53,7 @@ services:
 
   celerybeat:
     <<: *django
-    image: whlrest_local_celerybeat
+    image: trainserver_local_celerybeat
     depends_on:
       - redis
       - postgres
@@ -63,7 +63,7 @@ services:
 
   flower:
     <<: *django
-    image: whlrest_local_flower
+    image: trainserver_local_flower
     ports:
       - "5555:5555"
     command: /start-flower

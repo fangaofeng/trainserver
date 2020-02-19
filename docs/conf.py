@@ -1,4 +1,4 @@
-# whlrest documentation build configuration file, created by
+# trainserver documentation build configuration file, created by
 # sphinx-quickstart.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -39,7 +39,7 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = "whlrest"
+project = "trainserver"
 copyright = """2018, fgf@whl"""
 
 # The version info for the project you're documenting, acts as replacement for
@@ -163,7 +163,7 @@ html_static_path = ["_static"]
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "whlrestdoc"
+htmlhelp_basename = "trainserverdoc"
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -182,8 +182,8 @@ latex_elements = {
 latex_documents = [
     (
         "index",
-        "whlrest.tex",
-        "whlrest Documentation",
+        "trainserver.tex",
+        "trainserver Documentation",
         """fgf@whl""",
         "manual",
     )
@@ -217,8 +217,8 @@ latex_documents = [
 man_pages = [
     (
         "index",
-        "whlrest",
-        "whlrest Documentation",
+        "trainserver",
+        "trainserver Documentation",
         ["""fgf@whl"""],
         1,
     )
@@ -236,10 +236,10 @@ man_pages = [
 texinfo_documents = [
     (
         "index",
-        "whlrest",
-        "whlrest Documentation",
+        "trainserver",
+        "trainserver Documentation",
         """fgf@whl""",
-        "whlrest",
+        "trainserver",
         """whl rest""",
         "Miscellaneous",
     )

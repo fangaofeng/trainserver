@@ -1,5 +1,5 @@
 [run]
-include = whlrest/*
+include = trainserver/*
 omit = *migrations*, *tests*
 plugins =
     django_coverage_plugin

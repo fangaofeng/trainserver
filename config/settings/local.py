@@ -13,10 +13,11 @@ SECRET_KEY = env(
 ALLOWED_HOSTS = [
     "localhost",
     "0.0.0.0",
-    "192.168.0.104",
     "127.0.0.1",
     "*",
 ]
+# Django Admin URL.
+ADMIN_URL = 'admin/'
 # CACHEOPS_
 CACHEOPS_REDIS = "redis://localhost:6379/2"
 CACHEOPS = {
@@ -54,15 +55,15 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
 # django-cachalot
-CACHALOT_ENABLED = env.bool('CACHALOT_ENABLED', default=False)
-CACHALOT_TIMEOUT = env('CACHALOT_TIMEOUT', default=60 * 15)
-# CACHALOT_DATABASES = ['default']
-CACHALOT_ONLY_CACHABLE_TABLES = [
-    'admin_interface_theme', 'course_coursetype', 'permissions_operation', 'permissions_role',
-    'permissions_rolefilterbackendmodel', 'permissions_roleoperationshipwithfilter',
-    'permissions_roleoperationshipwithfilter_filters', 'orgs_department', 'traingroup_traingroup',
-    'traingroup_traingroup_trainers', 'authtoken_token']
-CACHE_MIDDLEWARE_SECONDS = 60 * 15
+# CACHALOT_ENABLED = env.bool('CACHALOT_ENABLED', default=False)
+# CACHALOT_TIMEOUT = env('CACHALOT_TIMEOUT', default=60 * 15)
+# # CACHALOT_DATABASES = ['default']
+# CACHALOT_ONLY_CACHABLE_TABLES = [
+#     'admin_interface_theme', 'course_coursetype', 'permissions_operation', 'permissions_role',
+#     'permissions_rolefilterbackendmodel', 'permissions_roleoperationshipwithfilter',
+#     'permissions_roleoperationshipwithfilter_filters', 'orgs_department', 'traingroup_traingroup',
+#     'traingroup_traingroup_trainers', 'authtoken_token']
+# CACHE_MIDDLEWARE_SECONDS = 60 * 15
 
 # TEMPLATES
 # ------------------------------------------------------------------------------
@@ -125,23 +126,23 @@ INSTALLED_APPS += ['debug_toolbar']  # noqa F405
 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#middleware
 MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']  # noqa F405
 # https://django-debug-toolbar.readthedocs.io/en/latest/configuration.html#debug-toolbar-config
-DEBUG_TOOLBAR_PANELS = [
-    'debug_toolbar.panels.versions.VersionsPanel',
-    'debug_toolbar.panels.timer.TimerPanel',
-    'debug_toolbar.panels.settings.SettingsPanel',
-    'debug_toolbar.panels.headers.HeadersPanel',
-    'debug_toolbar.panels.request.RequestPanel',
-    'debug_toolbar.panels.sql.SQLPanel',
-    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
-    'debug_toolbar.panels.templates.TemplatesPanel',
-    'debug_toolbar.panels.cache.CachePanel',
-    'debug_toolbar.panels.signals.SignalsPanel',
-    'debug_toolbar.panels.logging.LoggingPanel',
-    'debug_toolbar.panels.redirects.RedirectsPanel',
-    'debug_toolbar.panels.profiling.ProfilingPanel',
-    # http://django-cachalot.readthedocs.org/en/latest/quickstart.html#usage
-    'cachalot.panels.CachalotPanel',
-]
+# DEBUG_TOOLBAR_PANELS = [
+#     'debug_toolbar.panels.versions.VersionsPanel',
+#     'debug_toolbar.panels.timer.TimerPanel',
+#     'debug_toolbar.panels.settings.SettingsPanel',
+#     'debug_toolbar.panels.headers.HeadersPanel',
+#     'debug_toolbar.panels.request.RequestPanel',
+#     'debug_toolbar.panels.sql.SQLPanel',
+#     'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+#     'debug_toolbar.panels.templates.TemplatesPanel',
+#     'debug_toolbar.panels.cache.CachePanel',
+#     'debug_toolbar.panels.signals.SignalsPanel',
+#     'debug_toolbar.panels.logging.LoggingPanel',
+#     'debug_toolbar.panels.redirects.RedirectsPanel',
+#     'debug_toolbar.panels.profiling.ProfilingPanel'
+#     # http://django-cachalot.readthedocs.org/en/latest/quickstart.html#usage
+#     # 'cachalot.panels.CachalotPanel',
+# ]
 DEBUG_TOOLBAR_CONFIG = {
     'DISABLE_PANELS': [
         'debug_toolbar.panels.redirects.RedirectsPanel',

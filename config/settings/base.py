@@ -5,7 +5,7 @@ Base settings to build other settings files upon.
 import environ
 
 ROOT_DIR = environ.Path(
-    __file__) - 3  # (whlrest/config/settings/base.py - 3 = whlrest/)
+    __file__) - 3  # (trainserver/config/settings/base.py - 3 = trainserver/)
 APPS_DIR = ROOT_DIR
 
 env = environ.Env()
@@ -13,12 +13,13 @@ env = environ.Env()
 READ_DOT_ENV_FILE = env.bool('DJANGO_READ_DOT_ENV_FILE', default=True)
 if READ_DOT_ENV_FILE:
     # OS environment variables take precedence over variables from .env
-    env.read_env(str(ROOT_DIR.path('.env')))
+    env.read_env(str(ROOT_DIR.path('.runenv')))
 
 # GENERAL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = env.bool('DJANGO_DEBUG', False)
+
 # Local time zone. Choices are
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # though not all of them may be available with every OS.
@@ -40,7 +41,7 @@ USE_TZ = False
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
-    'default': env.db('DATABASE_URL'),
+    'default': env.db('DATABASE_URL', 'postgres://postgres:postgres@localhost:5432/whlrest'),
 
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
@@ -56,11 +57,6 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # ------------------------------------------------------------------------------
 DJANGO_APPS = [
 
-    # 'fluent_dashboard',
-    # 'admin_tools',
-    # 'admin_tools.theming',
-    # 'admin_tools.menu',
-    # 'admin_tools.dashboard',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -70,8 +66,6 @@ DJANGO_APPS = [
     'django.contrib.humanize',
     # 'django.contrib.humanize', # Handy template tags
     # 'bdadmin',
-    # 'grappelli',
-    # 'simpleui',
     # 'nucleus',
 
     # 'bootstrap_admin',
@@ -81,9 +75,7 @@ DJANGO_APPS = [
     'admin_interface',
     'colorfield',
     'admin_timeline',
-    # 'adminlteui',
-    # 'treebeard',
-    # 'adminactions',
+
     # 'vali',
     # 'adminlte3',
     # # Optional: Django admin theme (must be before django.contrib.admin)
@@ -97,7 +89,6 @@ THIRD_PARTY_APPS = [
     # 'allauth.account',
     # 'allauth.socialaccount',
 
-    # 'django_mptt_admin',
     # 'crispy_forms',
     # 'django_select2',
     # pip install django-private-storage 媒体文件可以鉴权
@@ -311,12 +302,10 @@ EMAIL_TIMEOUT = 5
 
 # ADMIN
 # ------------------------------------------------------------------------------
-# Django Admin URL.
-ADMIN_URL = 'admin/'
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = [
-    ("""fgf""", 'fgf@whl.com'),
+    ("""fgf""", '2964766044@qq.com'),
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
@@ -345,28 +334,28 @@ LOGGING = {
 }
 # Celery
 # ------------------------------------------------------------------------------
-INSTALLED_APPS += ['taskapp.celery.CeleryAppConfig']
-if USE_TZ:
-    # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-timezone
-    CELERY_TIMEZONE = TIME_ZONE
-# http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-broker_url
-CELERY_BROKER_URL = env('CELERY_BROKER_URL')
-# http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-result_backend
-CELERY_RESULT_BACKEND = CELERY_BROKER_URL
-# http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-accept_content
-CELERY_ACCEPT_CONTENT = ['json']
-# http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-task_serializer
-CELERY_TASK_SERIALIZER = 'json'
-# http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-result_serializer
-CELERY_RESULT_SERIALIZER = 'json'
-# http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-time-limit
-# TODO: set to whatever value is adequate in your circumstances
-CELERYD_TASK_TIME_LIMIT = 5 * 60
-# http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-soft-time-limit
-# TODO: set to whatever value is adequate in your circumstances
-CELERYD_TASK_SOFT_TIME_LIMIT = 60
-# http://docs.celeryproject.org/en/latest/userguide/configuration.html#beat-scheduler
-CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+# INSTALLED_APPS += ['taskapp.celery.CeleryAppConfig']
+# if USE_TZ:
+#     # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-timezone
+#     CELERY_TIMEZONE = TIME_ZONE
+# # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-broker_url
+# CELERY_BROKER_URL = env('CELERY_BROKER_URL')
+# # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-result_backend
+# CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+# # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-accept_content
+# CELERY_ACCEPT_CONTENT = ['json']
+# # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-task_serializer
+# CELERY_TASK_SERIALIZER = 'json'
+# # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-result_serializer
+# CELERY_RESULT_SERIALIZER = 'json'
+# # http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-time-limit
+# # TODO: set to whatever value is adequate in your circumstances
+# CELERYD_TASK_TIME_LIMIT = 5 * 60
+# # http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-soft-time-limit
+# # TODO: set to whatever value is adequate in your circumstances
+# CELERYD_TASK_SOFT_TIME_LIMIT = 60
+# # http://docs.celeryproject.org/en/latest/userguide/configuration.html#beat-scheduler
+# CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
 # django-allauth
 """
@@ -379,13 +368,12 @@ ACCOUNT_EMAIL_REQUIRED = True
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_ADAPTER = 'whlrest.users.adapters.AccountAdapter'
+ACCOUNT_ADAPTER = 'trainserver.users.adapters.AccountAdapter'
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-SOCIALACCOUNT_ADAPTER = 'whlrest.users.adapters.SocialAccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'trainserver.users.adapters.SocialAccountAdapter'
 
 """
-INSTALLED_APPS += ["compressor"]
-STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
+
 # Your stuff...
 # django-reset-framework
 # -------------------------------------------------------------------------------

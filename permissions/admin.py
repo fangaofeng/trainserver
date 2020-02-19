@@ -1,5 +1,5 @@
 from .models import Operation, Role, RoleFilterBackendModel, RoleOperationshipWithFilter
-from nested_admin import NestedStackedInline, NestedModelAdmin
+# from nested_admin import NestedStackedInline, NestedModelAdmin
 from mptt.models import TreeManyToManyField
 from django.utils.translation import gettext as _
 from django.forms.models import (

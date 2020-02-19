@@ -10,7 +10,7 @@ if not settings.configured:
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.local')  # pragma: no cover
 
 
-app = Celery('whlrest')
+app = Celery('trainserver')
 
 
 class CeleryAppConfig(AppConfig):

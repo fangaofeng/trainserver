@@ -140,4 +140,4 @@ class ExamProgress(TimeStampedModel):
         verbose_name_plural = _('exam_plan progresses')
 
     def __str__(self):
-        return '{}_{}'.format(self.trainer_id, self.examplan_id)
+        return '{}_{}'.format(self.trainer_id, self.plan_id)

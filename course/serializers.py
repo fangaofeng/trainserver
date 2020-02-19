@@ -14,7 +14,7 @@ import configparser
 from django.core.files import File
 
 from django.conf import settings
-from django.core.files.temp import TemporaryFile
+# from django.core.files.temp import TemporaryFile
 from rest_framework import serializers  # , exceptions
 from users.serializers import UserDetailsSerializer
 from .models import Coursetype, Courseware, Zipfile
