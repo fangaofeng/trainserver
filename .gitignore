@@ -1,7 +1,6 @@
 ### Python template
 # Byte-compiled / optimized / DLL files
 __pycache__/
-migrations/
 *.py[cod]
 *$py.class
 
@@ -152,11 +151,16 @@ typings/
 # .nfs files are created when an open file is removed but is still being accessed
 .nfs*
 
+### migrations template
+**/migrations/*
+!**/migrations/__init__.py
+
 
 ### VisualStudioCode template
 .vscode/*
 !.vscode/settings.json
 !.vscode/settings w.json
+!.vscode/settings l.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json

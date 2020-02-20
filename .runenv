@@ -1,10 +1,10 @@
 DJANGO_READ_DOT_ENV_FILE=True
-// DJANGO_SETTINGS_MODULE=config.settings.production
+DJANGO_SETTINGS_MODULE=config.settings.production
 DATABASE_URL=postgres://postgres:postgres@localhost:5432/whlrest
-// DJANGO_DEBUG=False
+DJANGO_DEBUG=False
 DJANGO_SECRET_KEY=9Z,2oHiQE9rU&eaZ0N|hRIG+df|]-M3qYmJa+EU#$fz>(x/E6B
 DJANGO_ADMIN_URL=manager/
-DJANGO_ALLOWED_HOSTS=localhost,192.168.0.104,0.0.0.0
+DJANGO_ALLOWED_HOSTS=localhost,192.168.0.104,127.0.0.1
 CELERY_BROKER_URL=redis://localhost:6379/0
 REDIS_URL=redis://localhost:6379/1
 USE_DOCKER=no

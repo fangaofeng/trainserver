@@ -39,10 +39,11 @@ urlpatterns = [
 
     # api end
     # Your stuff: custom urls includes go here
-] + static(
-    settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-# urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-urlpatterns += staticfiles_urlpatterns()
+]
+# + static(
+#    settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# # urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+# urlpatterns += staticfiles_urlpatterns()
 # user secret admin url
 
 urlpatterns += [
@@ -60,7 +61,10 @@ if os.environ.get('DJANGO_SETTINGS_MODULE') == 'config.settings.production':
 if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit
     # these url in browser to see how these error pages look like.
-
+    urlpatterns += static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += staticfiles_urlpatterns()
     from rest_framework.schemas import get_schema_view
     from rest_framework.renderers import JSONOpenAPIRenderer, BrowsableAPIRenderer, CoreAPIJSONOpenAPIRenderer
     from rest_framework.documentation import include_docs_urls

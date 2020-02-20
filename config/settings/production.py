@@ -1,3 +1,4 @@
+import os
 import logging
 
 from .base import *  # noqa
@@ -8,7 +9,7 @@ from .base import env
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env('DJANGO_SECRET_KEY')
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['train.com'])
+ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['127.0.0.1'])
 print(ALLOWED_HOSTS)
 # DATABASES
 # ------------------------------------------------------------------------------
@@ -43,25 +44,25 @@ CACHE_MIDDLEWARE_SECONDS = 60 * 15
 # SECURITY
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-# https://docs.djangoproject.com/en/dev/ref/settings/#secure-ssl-redirect
-SECURE_SSL_REDIRECT = env.bool('DJANGO_SECURE_SSL_REDIRECT', default=True)
-# https://docs.djangoproject.com/en/dev/ref/settings/#session-cookie-secure
-SESSION_COOKIE_SECURE = True
-# https://docs.djangoproject.com/en/dev/ref/settings/#session-cookie-httponly
-SESSION_COOKIE_HTTPONLY = True
-# https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-secure
-CSRF_COOKIE_SECURE = True
-# https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-httponly
-CSRF_COOKIE_HTTPONLY = True
-# https://docs.djangoproject.com/en/dev/topics/security/#ssl-https
-# https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-seconds
-# TODO: set this to 60 seconds first and then to 518400 once you prove the former works
-SECURE_HSTS_SECONDS = 60
-# https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-include-subdomains
-SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool(
-    "DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", default=True
-)
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# # https://docs.djangoproject.com/en/dev/ref/settings/#secure-ssl-redirect
+# SECURE_SSL_REDIRECT = env.bool('DJANGO_SECURE_SSL_REDIRECT', default=True)
+# # https://docs.djangoproject.com/en/dev/ref/settings/#session-cookie-secure
+# SESSION_COOKIE_SECURE = True
+# # https://docs.djangoproject.com/en/dev/ref/settings/#session-cookie-httponly
+# SESSION_COOKIE_HTTPONLY = True
+# # https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-secure
+# CSRF_COOKIE_SECURE = True
+# # https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-httponly
+# CSRF_COOKIE_HTTPONLY = True
+# # https://docs.djangoproject.com/en/dev/topics/security/#ssl-https
+# # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-seconds
+# # TODO: set this to 60 seconds first and then to 518400 once you prove the former works
+# SECURE_HSTS_SECONDS = 60
+# # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-include-subdomains
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool(
+#     "DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", default=True
+# )
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-preload
 SECURE_HSTS_PRELOAD = env.bool("DJANGO_SECURE_HSTS_PRELOAD", default=True)
 # https://docs.djangoproject.com/en/dev/ref/middleware/#x-content-type-options-nosniff
@@ -90,8 +91,13 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
 
 # STATIC
 # ------------------------
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
+# https://docs.djangoproject.com/en/dev/ref/settings/#static-root
+STATIC_ROOT = str(ROOT_DIR('staticfiles'))
+print(STATIC_ROOT)
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+#STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+#STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 # MEDIA
 # ------------------------------------------------------------------------------
 # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
@@ -140,15 +146,15 @@ ADMIN_URL = env('DJANGO_ADMIN_URL')
 # }
 
 # django-compressor
-INSTALLED_APPS += ["compressor"]
-STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
+# INSTALLED_APPS += ["compressor"]
+# STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
 # ------------------------------------------------------------------------------
 # https://django-compressor.readthedocs.io/en/latest/settings/#django.conf.settings.COMPRESS_ENABLED
-COMPRESS_ENABLED = env.bool("COMPRESS_ENABLED", default=True)
+# COMPRESS_ENABLED = env.bool("COMPRESS_ENABLED", default=True)
 # https://django-compressor.readthedocs.io/en/latest/settings/#django.conf.settings.COMPRESS_STORAGE
 # COMPRESS_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 # https://django-compressor.readthedocs.io/en/latest/settings/#django.conf.settings.COMPRESS_URL
-COMPRESS_URL = STATIC_URL  # noqa F405
+# COMPRESS_URL = STATIC_URL  # noqa F405
 
 # Gunicorn
 # ------------------------------------------------------------------------------
@@ -157,10 +163,18 @@ COMPRESS_URL = STATIC_URL  # noqa F405
 # WhiteNoise
 # ------------------------------------------------------------------------------
 # http://whitenoise.evans.io/en/latest/django.html#enable-whitenoise
-MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')  # noqa F405
-
+tindex = MIDDLEWARE.index('django.middleware.security.SecurityMiddleware')
+MIDDLEWARE.insert(tindex+1, 'whitenoise.middleware.WhiteNoiseMiddleware')  # noqa F405
+print(MIDDLEWARE)
 # LOGGING
 # ------------------------------------------------------------------------------
+# ROLLBAR = {
+#     'access_token': SECRET_KEY,
+#     'environment': 'development' if DEBUG else 'production',
+#     'branch': 'master',
+#     'root': '/mnt/h/trian/whlrest/',
+# }
+# MIDDLEWARE += ['rollbar.contrib.django.middleware.RollbarNotifierMiddleware']
 # https://docs.djangoproject.com/en/dev/ref/settings/#logging
 # See https://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
@@ -216,6 +230,6 @@ LOGGING = {
 # SECRET_ADMIN_URL = 'adminyxy/'
 INSTALLED_APPS += ['admin_honeypot']
 # print(INSTALLED_APPS)
-MIDDLEWARE = ['django.middleware.gzip.GZipMiddleware']+MIDDLEWARE
+# MIDDLEWARE = ['django.middleware.gzip.GZipMiddleware']+MIDDLEWARE
 # print(INSTALLED_APPS)
 # ------------------------------------------------------------------------------

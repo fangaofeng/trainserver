@@ -140,7 +140,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 # MIGRATIONS
 # ------------------------------------------------------------------------------
-# https://docs.djangoproject.com/en/dev/ref/settings/#migration-modules
+# https://docs.djangoproject.com/en/2.2/ref/settings/#migration-modules
 MIGRATION_MODULES = {
     'sites': 'contrib.sites.migrations'
 }
@@ -214,7 +214,6 @@ MIDDLEWARE = [
 
 # STATIC
 # ------------------------------------------------------------------------------
-# https://docs.djangoproject.com/en/dev/ref/settings/#static-root
 STATIC_ROOT = str(ROOT_DIR('staticfiles'))
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = '/static/'
