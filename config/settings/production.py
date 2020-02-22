@@ -10,7 +10,7 @@ from .base import env
 SECRET_KEY = env('DJANGO_SECRET_KEY')
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['127.0.0.1'])
-print(ALLOWED_HOSTS)
+# print(ALLOWED_HOSTS)
 # DATABASES
 # ------------------------------------------------------------------------------
 DATABASES['default'] = env.db('DATABASE_URL')  # noqa F405
@@ -93,9 +93,9 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
 # ------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-root
 STATIC_ROOT = str(ROOT_DIR('staticfiles'))
-print(STATIC_ROOT)
+# print(STATIC_ROOT)
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 #STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 #STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 # MEDIA
@@ -163,9 +163,9 @@ ADMIN_URL = env('DJANGO_ADMIN_URL')
 # WhiteNoise
 # ------------------------------------------------------------------------------
 # http://whitenoise.evans.io/en/latest/django.html#enable-whitenoise
-tindex = MIDDLEWARE.index('django.middleware.security.SecurityMiddleware')
-MIDDLEWARE.insert(tindex+1, 'whitenoise.middleware.WhiteNoiseMiddleware')  # noqa F405
-print(MIDDLEWARE)
+# tindex = MIDDLEWARE.index('django.middleware.security.SecurityMiddleware')
+# MIDDLEWARE.insert(tindex+1, 'whitenoise.middleware.WhiteNoiseMiddleware')  # noqa F405
+# print(MIDDLEWARE)
 # LOGGING
 # ------------------------------------------------------------------------------
 # ROLLBAR = {

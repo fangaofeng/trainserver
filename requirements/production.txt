@@ -4,13 +4,13 @@
 
 gunicorn==20.0.4 # https://github.com/benoitc/gunicorn
 # django-compressor
-whitenoise
-Brotli
+# whitenoise
+# Brotli
 django-admin-honeypot==1.1.0
 psycopg2-binary==2.8.4  # https://github.com/psycopg/psycopg2
-raven==6.9.0  # https://github.com/getsentry/raven-python
+# raven==6.9.0  # https://github.com/getsentry/raven-python
 
 # Django
 # ------------------------------------------------------------------------------
-django-storages[boto3]==1.7.1  # https://github.com/jschneier/django-storages
-django-anymail[mailgun]==4.3  # https://github.com/anymail/django-anymail
+# django-storages[boto3]==1.7.1  # https://github.com/jschneier/django-storages
+# django-anymail[mailgun]==4.3  # https://github.com/anymail/django-anymail
