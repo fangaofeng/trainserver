@@ -18,7 +18,7 @@ django-import-export
 django-cacheops
 django-admin-timeline
 django-model-utils
-
+django-extensions==2.2.8  # https://github.com/django-extensions/django-extensions
 pandas==0.24.2
 ffmpeg-python==0.1.17
 uritemplate==3.0.0

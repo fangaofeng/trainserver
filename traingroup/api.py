@@ -7,8 +7,8 @@ from common.viewset import CreateRetrieveListUpdateViewSet, ListUpdateViewSet
 from django.contrib.auth import get_user_model
 from django.http import Http404, HttpResponseNotFound
 from django.utils.decorators import method_decorator
-from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
+# from drf_yasg import openapi
+# from drf_yasg.utils import swagger_auto_schema
 from permissions.filters import RoleFilterBackend, BOOLEAN_CHOICES, trainserverFilterBackend
 from permissions.permissions import RolePermission
 from rest_framework import generics, status, viewsets

@@ -9,8 +9,8 @@ from common.pagination import ListPagination
 from django.contrib.auth import get_user_model
 from django.http import Http404
 from django.utils.decorators import method_decorator
-from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
+# from drf_yasg import openapi
+# from drf_yasg.utils import swagger_auto_schema
 from permissions.permissions import RolePermission
 from rest_flex_fields import FlexFieldsModelViewSet
 from rest_framework import generics, serializers, status, viewsets

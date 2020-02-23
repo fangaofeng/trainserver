@@ -10,10 +10,11 @@ from django.contrib.auth import logout as django_logout
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from django.utils.decorators import method_decorator
-from django.views.decorators.debug import sensitive_post_parameters
 from django.utils.translation import ugettext_lazy as _
-from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
+from django.views.decorators.debug import sensitive_post_parameters
+from django_filters.rest_framework import DjangoFilterBackend
+# from drf_yasg import openapi
+# from drf_yasg.utils import swagger_auto_schema
 from orgs.models import Department
 from permissions.filters import RoleFilterBackend
 from permissions.permissions import RolePermission
@@ -25,7 +26,6 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-from .filter import IsManagerFilterBackend, IsOwnerFilterBackend
 
 from .app_settings import (
     JWTSerializer,
@@ -37,6 +37,7 @@ from .app_settings import (
     UserDetailsSerializer,
     create_token
 )
+from .filter import IsManagerFilterBackend, IsOwnerFilterBackend
 from .models import Excelfile, TokenModel, User
 # from rest_framework import viewsets, generics
 from .serializers import AccountInfoDetailsSerializer, ExcelfileSerializer, UserAvtarSerializer, UserListSerializer
@@ -343,17 +344,17 @@ class UserAvatarView(CreateAPIView):
         return get_user_model().objects.none()
 
 
-importid = openapi.Parameter('importid',
-                             in_=openapi.IN_QUERY,
-                             description='导入的批次id',
-                             type=openapi.TYPE_STRING)
-role = openapi.Parameter('role',
-                         in_=openapi.IN_QUERY,
-                         description='用户角色',
-                         type=openapi.TYPE_STRING)
+# importid = openapi.Parameter('importid',
+#                              in_=openapi.IN_QUERY,
+#                              description='导入的批次id',
+#                              type=openapi.TYPE_STRING)
+# role = openapi.Parameter('role',
+#                          in_=openapi.IN_QUERY,
+#                          description='用户角色',
+#                          type=openapi.TYPE_STRING)
 
 
-@method_decorator(name='list', decorator=swagger_auto_schema(manual_parameters=[importid, role]))
+# @method_decorator(name='list', decorator=swagger_auto_schema(manual_parameters=[importid, role]))
 class UserView(RoleFilterMixViewSet, ModelViewSet):
 
     """
@@ -363,37 +364,39 @@ class UserView(RoleFilterMixViewSet, ModelViewSet):
         importid
     """
     roles_filterbackends = [IsManagerFilterBackend]
-    filter_backends = [RoleFilterBackend]
+
     renderer_classes = (EmberJSONRenderer,)
     serializer_class = UserDetailsSerializer
     permission_classes = [RolePermission]
     pagination_class = ListPagination
     queryset = get_user_model().objects.all()
+    filter_backends = [RoleFilterBackend, DjangoFilterBackend]
+    filterset_fields = ['importid', 'role']
 
     def get_serializer_class(self):
         if self.action == 'bulkdelete':
             return UserListSerializer
         return UserDetailsSerializer
 
-    def get_queryset(self):
-        """
-        sysadmin
-        trainmanager
-        employee
-        importid
-        """
-        # 需要增加权限处理
-        # EMPLOYEE_ROLE_CHOICES = {'系统管理员': 0, '培训管理员': 1, '学员': 2}
-        role = self.request.query_params.get('role', None)
-        # role = EMPLOYEE_ROLE_CHOICES.get(role, None)
-        if role:
-            queryset = get_user_model().objects.filter(roles__name=role)
-        else:
-            queryset = get_user_model().objects.all()
-        importid = self.request.query_params.get('importid', None)
-        if importid is not None:
-            queryset = queryset.filter(importid=importid)
-        return queryset
+    # def get_queryset(self):
+    #     """
+    #     sysadmin
+    #     trainmanager
+    #     employee
+    #     importid
+    #     """
+    #     # 需要增加权限处理
+    #     # EMPLOYEE_ROLE_CHOICES = {'系统管理员': 0, '培训管理员': 1, '学员': 2}
+    #     role = self.request.query_params.get('role', None)
+    #     # role = EMPLOYEE_ROLE_CHOICES.get(role, None)
+    #     if role:
+    #         queryset = get_user_model().objects.filter(roles__name=role)
+    #     else:
+    #         queryset = get_user_model().objects.all()
+    #     importid = self.request.query_params.get('importid', None)
+    #     if importid is not None:
+    #         queryset = queryset.filter(importid=importid)
+    #     return queryset
 
     @action(detail=False, methods=['PATCH'], name='bulk delete users')
     def bulkdelete(self, request, *args, **kwargs):

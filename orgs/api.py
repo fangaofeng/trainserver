@@ -11,13 +11,15 @@ import rest_framework_filters as filters
 from django.contrib.auth import get_user_model
 from django.template.defaultfilters import slugify
 from common.jsonrender import EmberJSONRenderer
-from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
+# from drf_yasg import openapi
+# from drf_yasg.utils import swagger_auto_schema
 from django.utils.decorators import method_decorator
 from permissions.permissions import RolePermission
 from permissions.filters import RoleFilterBackend
 from django.shortcuts import get_object_or_404 as _get_object_or_404
 from .filter import IsManagerFilterBackend, IsAdminFilterBackend, IsUserFilterBackend
+
+
 trainmanager = openapi.Parameter('trainmanager',
                                  in_=openapi.IN_QUERY,
                                  description='是否返回管理员信息',
