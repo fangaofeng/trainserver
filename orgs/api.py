@@ -11,8 +11,8 @@ import rest_framework_filters as filters
 from django.contrib.auth import get_user_model
 from django.template.defaultfilters import slugify
 from common.jsonrender import EmberJSONRenderer
-# from drf_yasg import openapi
-# from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from django.utils.decorators import method_decorator
 from permissions.permissions import RolePermission
 from permissions.filters import RoleFilterBackend
@@ -53,18 +53,18 @@ class OrgViewSet(viewsets.ModelViewSet):
 
         return super(OrgViewSet, self).get_serializer(*args, **kwargs)
 
-    def get_queryset(self):
-        if self.action == 'list':
-            queryset = self.filter_queryset(super().get_queryset())
+    # def get_queryset(self):
+    #     if self.action == 'list':
+    #         queryset = self.filter_queryset(super().get_queryset())
 
-            if not (self.request.query_params.get('id', None) or self.request.query_params.get('slug', None) or
-                    self.request.query_params.get('name', None)):
-                if hasattr(self.request.user, 'managerdepartment'):
-                    queryset = queryset.filter(id=self.request.user.managerdepartment.id)
-                else:
-                    queryset = queryset.filter(id=self.request.user.department.id)
-            return queryset
-        return super().get_queryset()
+    #         if not (self.request.query_params.get('id', None) or self.request.query_params.get('slug', None) or
+    #                 self.request.query_params.get('name', None)):
+    #             if hasattr(self.request.user, 'managerdepartment'):
+    #                 queryset = queryset.filter(id=self.request.user.managerdepartment.id)
+    #             else:
+    #                 queryset = queryset.filter(id=self.request.user.department.id)
+    #         return queryset
+    #     return super().get_queryset()
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

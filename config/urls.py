@@ -51,7 +51,6 @@ urlpatterns += [
     path(settings.ADMIN_URL, admin.site.urls),
     path(settings.ADMIN_URL+'timeline', include('admin_timeline.urls')),
 ]
-print(settings.ADMIN_URL)
 
 if os.environ.get('DJANGO_SETTINGS_MODULE') == 'config.settings.production':
     urlpatterns += [

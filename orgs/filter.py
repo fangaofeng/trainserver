@@ -21,7 +21,7 @@ class IsUserFilterBackend(BaseFilterBackend):
     """
     Filter that only allows users to see their own objects.
     """
-    name = 'IsOwnerFilterBackend'
+    name = 'IsUserFilterBackend'
 
     def filter_queryset(self, request, queryset, view):
         return queryset.filter(id=request.user.department.id)

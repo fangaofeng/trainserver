@@ -344,17 +344,6 @@ class UserAvatarView(CreateAPIView):
         return get_user_model().objects.none()
 
 
-# importid = openapi.Parameter('importid',
-#                              in_=openapi.IN_QUERY,
-#                              description='导入的批次id',
-#                              type=openapi.TYPE_STRING)
-# role = openapi.Parameter('role',
-#                          in_=openapi.IN_QUERY,
-#                          description='用户角色',
-#                          type=openapi.TYPE_STRING)
-
-
-# @method_decorator(name='list', decorator=swagger_auto_schema(manual_parameters=[importid, role]))
 class UserView(RoleFilterMixViewSet, ModelViewSet):
 
     """
@@ -371,7 +360,7 @@ class UserView(RoleFilterMixViewSet, ModelViewSet):
     pagination_class = ListPagination
     queryset = get_user_model().objects.all()
     filter_backends = [RoleFilterBackend, DjangoFilterBackend]
-    filterset_fields = ['importid', 'role']
+    filterset_fields = ['importid', 'roles']
 
     def get_serializer_class(self):
         if self.action == 'bulkdelete':
