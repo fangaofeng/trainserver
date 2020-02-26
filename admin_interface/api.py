@@ -28,5 +28,7 @@ class GetUploadurl(APIView):
             'paper': self.geturl(request, 'api:paper_upload'),
             'avatar': self.geturl(request, 'api:account_avatar'),
             'org': self.geturl(request, 'api:org_upload'),
-            'user': self.geturl(request, 'api:user_upload')}
+            'user': self.geturl(request, 'api:user_upload'),
+            'blogCover': 'http://localhost/'  # 假的
+        }
         return Response({'status': 'ok', 'data': UPLOAD_PATH})

@@ -109,6 +109,9 @@ class Role(models.Model):
     display = models.CharField(
         max_length=255,  verbose_name=_('display')
     )
+    default = models.BooleanField(
+        default=False,
+        verbose_name=_('default role'))
     operations = models.ManyToManyField(to=Operation,
                                         through='RoleOperationshipWithFilter',
                                         through_fields=('role', 'operation'),

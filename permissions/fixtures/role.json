@@ -1,2 +1,26 @@
-admin/
-[{"model": "permissions.role", "pk": 2, "fields": {"name": "stu", "display": "stu"}}, {"model": "permissions.role", "pk": 5, "fields": {"name": "admin", "display": "admin"}}, {"model": "permissions.role", "pk": 6, "fields": {"name": "trainmanager", "display": "trainmanager"}}]
+[
+    {
+        "model": "permissions.role",
+        "pk": 2,
+        "fields": {
+            "name": "stu",
+            "display": "stu"
+        }
+    },
+    {
+        "model": "permissions.role",
+        "pk": 5,
+        "fields": {
+            "name": "admin",
+            "display": "admin"
+        }
+    },
+    {
+        "model": "permissions.role",
+        "pk": 6,
+        "fields": {
+            "name": "trainmanager",
+            "display": "trainmanager"
+        }
+    }
+]

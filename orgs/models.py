@@ -14,6 +14,14 @@ class DepartmentManager(TreeManager):
         except Exception as e:
             return None
 
+    def getobjectbyslug(self, slug):
+
+        try:
+            tdepartment = self.get(slug=slug)
+            return tdepartment
+        except ObjectDoesNotExist as e:
+            return None
+
 
 class Department(MPTTModel):
     name = models.CharField('部门名称', max_length=150)
@@ -29,14 +37,6 @@ class Department(MPTTModel):
         related_name='managerdepartment',
     )
     objects = DepartmentManager()
-    @staticmethod
-    def getobjectbyslug(slug):
-
-        try:
-            tdepartment = Department.objects.get(slug=slug)
-            return tdepartment
-        except ObjectDoesNotExist as e:
-            return None
 
     def get_slug_list(self):
         try:

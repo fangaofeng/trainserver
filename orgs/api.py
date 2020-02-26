@@ -33,7 +33,7 @@ class OrgViewSet(viewsets.ModelViewSet):
     queryset = Department.objects.all()
     serializer_class = DepartmentWriteSerializer
     permission_classes = [RolePermission]
-    roles_filterbackends = [IsManagerFilterBackend, IsUserFilterBackend]
+    roles_filterbackends = [IsManagerFilterBackend, IsUserFilterBackend, IsAdminFilterBackend]
     filter_backends = [RoleFilterBackend, filters.backends.RestFrameworkFilterBackend]
 
     filterset_fields = ('id', 'slug', 'name',)

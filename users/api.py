@@ -26,6 +26,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from permissions.models import Role
 
 from .app_settings import (
     JWTSerializer,
@@ -97,6 +98,12 @@ class ExcelfileUploadView(CreateAPIView):
         user_list = []  # 用户信息列表
         # 读取表信息
         importid = timezone.now().strftime("%Y%m%d%H%M%S")
+        roles = Role.objects.values_list('id', 'display', 'default')
+        defaultrole = ''
+        for id, display, default in roles:
+            if default:
+                defaultrole = id
+        roledict = dict((display, id) for id, display, default in roles)
         for row in range(1, nrows):
             user_dic = {}
             for col in range(0, ncols):
@@ -117,38 +124,42 @@ class ExcelfileUploadView(CreateAPIView):
             password = user_list[cell][headers[3]]
             # department_id = user_list[cell][headers[4]]
             employee_position = user_list[cell][headers[5]]
-            if user_list[cell][headers[6]] == "学员":
-                role = str(user_list[cell][headers[6]]).replace("学员", '2')
-            elif user_list[cell][headers[6]] == "系统管理员":
-                role = str(user_list[cell][headers[6]]).replace("系统管理员", '0')
-            elif user_list[cell][headers[6]] == "培训管理员":
-                role = str(user_list[cell][headers[6]]).replace("培训管理员", '1')
+            role = roledict.get(user_list[cell][headers[6]], defaultrole)
+            # if user_list[cell][headers[6]] == "学员":
+            #     role = str(user_list[cell][headers[6]]).replace("学员", '2')
+            # elif user_list[cell][headers[6]] == "系统管理员":
+            #     role = str(user_list[cell][headers[6]]).replace("系统管理员", '0')
+            # elif user_list[cell][headers[6]] == "培训管理员":
+            #     role = str(user_list[cell][headers[6]]).replace("培训管理员", '1')
             info = user_list[cell][headers[7]]
-            TrainManager = user_list[cell][headers[8]]
+            # TrainManager = user_list[cell][headers[8]]
+            department = Department.objects.getobjectbyslug(user_list[cell][headers[4]])
 
             if User.objects.filter(user_no=user_no) or User.objects.filter(username=username).exists():
                 # 判断数据库中是否有相同字段，若有则列表下标+1跳过，如有需要可返回相同字段内容
-                print(user_no, username)
+                # print(user_no, username)
                 continue
             else:
                 # 添加数据
-                user = User(
+                userdata = dict(
                     user_no=user_no,
                     name=name,
                     username=username,
 
-                    department=Department.objects.filter(slug=user_list[cell][headers[4]]).first(),
+                    department=department.id if department else None,
 
                     employee_position=employee_position,
-                    role=role,
+                    roles=[role],
                     info=info,
                     importid=importid
                     # work_company=work_company
 
                 )
-
-                user.set_password(password)  # 密码转码
-                user.save()
+                user_serializer = UserDetailsSerializer(data=userdata)
+                user_serializer.is_valid(raise_exception=True)
+                self.perform_create(user_serializer)
+                user_serializer.instance.set_password(password)  # 密码转码
+                user_serializer.instance.save()
                 count += 1
                 # if role == '培训管理员':
                 #     # administrator= User.id  # 去数据库查询到role=1的用户ID
@@ -358,7 +369,7 @@ class UserView(RoleFilterMixViewSet, ModelViewSet):
     serializer_class = UserDetailsSerializer
     permission_classes = [RolePermission]
     pagination_class = ListPagination
-    queryset = get_user_model().objects.all()
+    queryset = get_user_model().objects.exclude(is_staff=True).exclude(is_superuser=True)
     filter_backends = [RoleFilterBackend, DjangoFilterBackend]
     filterset_fields = ['importid', 'roles']
 
