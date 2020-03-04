@@ -80,9 +80,6 @@ class ExamPaPerCreateSerializer(OwnerFieldSerializer):
         multichoices, singlechoices, judgements, questions = self.read_questions(excel)
         attrs['cover'] = File(open(cover, mode='rb'))
         attrs['cover'].name = '_'.join([exame_no, os.path.basename(cover)])
-        # attrs['multichoices'] = self.question_extrac(multichoices, exame_no)
-        # attrs['singlechoices'] = self.question_extrac(singlechoices, exame_no)
-        # attrs['judgements'] = self.question_extrac(judgements, exame_no)
         attrs['questions'] = self.question_extrac(questions, exame_no)
         del attrs['zipfileid']
 
@@ -91,16 +88,14 @@ class ExamPaPerCreateSerializer(OwnerFieldSerializer):
     def save_questions(self, questions):
         querysetlist = []
         for question in questions:
-            querysetlist.append(QuestionExam(**question))
 
-        return QuestionExam.objects.bulk_create(querysetlist)
+            obj, created = QuestionExam.objects.get_or_create(**question)
+            querysetlist.append(obj)
+        return querysetlist
 
     def save(self, **kwargs):
-        # create question
-        # self.validated_data['multichoices'] = self.save_questions(self.validated_data['multichoices'])
-        # self.validated_data['singlechoices'] = self.save_questions(self.validated_data['singlechoices'])
-        # self.validated_data['judgements'] = self.save_questions(self.validated_data['judgements'])
-        self.validated_data['questions'] = self.save_questions(validated_data['questions'])
+
+        self.validated_data['questions'] = self.save_questions(self.validated_data['questions'])
         super(ExamPaPerCreateSerializer, self).save(**kwargs)
 
     def unzipfile(self, zipfileid):
@@ -130,7 +125,7 @@ class ExamPaPerCreateSerializer(OwnerFieldSerializer):
 
         unziparchive.close()
 
-        multichoices, singlechoices, judgements = self.read_questions(excel)
+        # multichoices, singlechoices, judgements, questions = self.read_questions(excel)
         return cover, excel
 
     def read_questions(self, excelfile):
@@ -147,24 +142,26 @@ class ExamPaPerCreateSerializer(OwnerFieldSerializer):
             paper_groupbytype = paper.groupby(paper['试题分类'])
             t = paper_groupbytype.get_group('多选题').reset_index(drop=True)
             multichoices = t.drop(['选项A', '选项B', '选项C', '选项D', '选项E', '选项F'], axis=1)
+            multichoicesdict = multichoices.to_dict(orient='records')
             t = paper_groupbytype.get_group('单选题').reset_index(drop=True)
             t.index += 1
             singlechoices = t.drop(['选项A', '选项B', '选项C', '选项D', '选项E', '选项F'], axis=1)
-            questions.update(singlechoices=singlechoices)
+            singlechoicesdict = singlechoices.to_dict(orient='records')
             t = paper_groupbytype.get_group('判断题').reset_index(drop=True)
             t.index += 1
             judgements = t.drop(['选项A', '选项B', '选项C', '选项D', '选项E', '选项F'], axis=1)
 
-            questions.update(judgements=judgements)
-
+            judgementsdict = judgements.to_dict(orient='records')
+            questions = paper.drop(['选项A', '选项B', '选项C', '选项D', '选项E', '选项F'], axis=1)
+            questionsdict = questions.to_dict(
+                orient='records')
             # 试卷信息来自界面，无需再获取
 
-            return multichoices.to_dict(orient='records'), singlechoices.to_dict(orient='records'), judgements.to_dict(
-                orient='records'), questions
+            return multichoicesdict, singlechoicesdict, judgementsdict, questionsdict
         except Exception as e:
             warnings.warn(str(e))
 
-            return None, None, None
+            return None, None, None, None
 
 
 class ExamPaPerSerializer(OwnerFlexFSerializer):
@@ -185,7 +182,7 @@ class ExamPaPerSerializer(OwnerFlexFSerializer):
             'questions': (QuestionExamSerializer, {'source': 'questions', 'many': True})
         }
 
-    def get_questions(self, instance):
+    def get_questionsdict(self, instance):
         questionsdict = {}
 
         q = instance.questions.all()

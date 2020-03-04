@@ -1,4 +1,5 @@
 from rest_framework.renderers import JSONRenderer
+from collections import OrderedDict
 
 
 class EmberJSONRenderer(JSONRenderer):
@@ -10,6 +11,8 @@ class EmberJSONRenderer(JSONRenderer):
                 if isinstance(data, dict):
                     if not data.pop('NOCHANGE', False):
                         data = {'status': 'ok', 'data': data}
+                else:
+                    data = {'status': 'ok', 'data': data}
             else:
                 data = {'status': 'error', "resonse": data}
 

@@ -12,17 +12,19 @@ from common.selffield import ChoiceField
 import pendulum
 from django.utils import timezone
 from rest_flex_fields import FlexFieldsModelSerializer
-from common.serializers import OwnerFlexFSerializer, OwnerFieldSerializer
+from common.serializers import OwnerFlexFSerializer, OwnerFieldSerializer, CurrentUserDepartmentDefault
 
 
 class ExamPlanSerializer(OwnerFlexFSerializer):
+    department = serializers.HiddenField(
+        default=CurrentUserDepartmentDefault()
+    )
     status = ChoiceField(required=False, choices=ExamPlan.STATUS_CHOICES)
-    # exampaper_name = serializers.CharField(source='exampaper.name', read_only=True)
     ratio = serializers.SerializerMethodField()
 
     class Meta:
         model = ExamPlan
-        fields = ['id', 'name', 'start_time', 'exampaper',
+        fields = ['id', 'name', 'start_time', 'exampaper', 'department',
                   'creater', 'end_time', 'traingroups', 'status', 'ratio']
         read_only_fields = ('id', 'created', 'creater', 'status', 'ratio')
         ordering = ['created']
@@ -47,7 +49,7 @@ class ExamPlanSerializer(OwnerFlexFSerializer):
                     answerlist = list(answers)
                     for value in answerlist:
                         value.update(answer='')
-                    trainer.examplan_progresses.create(plan=instance, answers=answerlist, traingroup=traingroup)
+                    trainer.examplan_progresses.create(plan=instance, answers=answerlist)
         return instance
 
 
@@ -164,9 +166,10 @@ class ExamProgressOnlySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ExamProgress
-        fields = ['created', 'trainer', 'plan', 'status', 'start_time',
+        fields = ['id', 'created', 'trainer', 'plan', 'status', 'start_time',
                   'end_time', 'score', 'answers', 'days_remaining']
-        read_only_fields = ('created', 'trainer', 'plan', 'status', 'start_time', 'score', 'answers', 'days_remaining')
+        read_only_fields = ['id', 'created', 'trainer', 'plan',
+                            'status', 'start_time', 'score', 'answers', 'days_remaining']
         ordering = ['created']
 
     def get_days_remaining(self, examprogress):
@@ -176,11 +179,11 @@ class ExamProgressOnlySerializer(serializers.ModelSerializer):
 
 
 class ExamAggregationForEmployee(serializers.Serializer):
-    examcompletedes = ExamProgressSerializer(many=True)
-    examtodoes = ExamProgressSerializer(many=True)
-    examoverdue = ExamProgressSerializer(many=True)
+    completed = ExamProgressOnlySerializer(many=True)
+    todo = ExamProgressOnlySerializer(many=True)
+    overdue = ExamProgressOnlySerializer(many=True)
 
     class Meta:
 
         fields = '__all__'
-        read_only_fields = ('examcompletedes', 'examtodoes', 'examoverdue')
+        read_only_fields = ('completed', 'todo', 'overdue')

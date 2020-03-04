@@ -13,20 +13,23 @@ from common.serializers import OwnerFieldSerializer
 import pendulum
 from rest_flex_fields import FlexFieldsModelSerializer
 from django.utils import timezone
+from common.serializers import CurrentUserDepartmentDefault
 
 
 class LearnPlanSerializer(serializers.ModelSerializer):
-
-    traingroups = serializers.PrimaryKeyRelatedField(required=True, many=True, queryset=TrainGroup.objects.all())
-    creater = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
+    department = serializers.HiddenField(
+        default=CurrentUserDepartmentDefault()
     )
+    # traingroups = serializers.PrimaryKeyRelatedField(required=True, many=True, queryset=TrainGroup.objects.all())
+    # creater = serializers.HiddenField(
+    #     default=serializers.CurrentUserDefault()
+    # )
     status = ChoiceField(required=False, choices=LearnPlan.STATUS_CHOICES)
     course_name = serializers.CharField(source='course.name', read_only=True)
 
     class Meta:
         model = LearnPlan
-        fields = ['id', 'name', 'start_time', 'course', 'course_name',
+        fields = ['id', 'name', 'start_time', 'course', 'course_name', 'department',
                   'creater', 'end_time', 'orexame', 'traingroups', 'status']
         read_only_fields = ('id', 'create_time', 'creater', 'course_name', 'status')
         ordering = ['create_time']
@@ -39,7 +42,7 @@ class LearnPlanSerializer(serializers.ModelSerializer):
             trainers = traingroup.get_trainers()
             if trainers:
                 for trainer in trainers:
-                    trainer.learnplan_progresses.create(plan=instance, traingroup=traingroup)
+                    trainer.learnplan_progresses.create(plan=instance)
         return instance
 
 
@@ -173,14 +176,14 @@ class LearnProgressReadOnlySerializer(serializers.ModelSerializer):
 
 
 class AggregationSetForEmployee(serializers.Serializer):
-    learncompletedes = LearnProgressReadOnlySerializer(many=True)
-    learntodoes = LearnProgressReadOnlySerializer(many=True)
-    learnoverdue = LearnProgressReadOnlySerializer(many=True)
+    completed = LearnProgressReadOnlySerializer(many=True)
+    todo = LearnProgressReadOnlySerializer(many=True)
+    overdue = LearnProgressReadOnlySerializer(many=True)
 
     class Meta:
 
         fields = '__all__'
-        read_only_fields = ('learncompletedes', 'learntodoes', 'learnoverdue')
+        read_only_fields = ('completed', 'todo', 'overdue')
 
 
 class PublicLearnProgressSerializer(OwnerFieldSerializer):
@@ -198,11 +201,23 @@ class PublicLearnProgressSerializer(OwnerFieldSerializer):
 class PublicLearnProgressReadonlySerializer(serializers.ModelSerializer):
     status = ChoiceField(choices=PublicLearnProgress.STATUS_CHOICES)
     course = CoursewareSerializer(read_only=True)
+    rate_progress = serializers.SerializerMethodField()
 
     class Meta:
         model = PublicLearnProgress
-        fields = ['id', 'status', 'start_time', 'end_time', 'progress', 'course']
-        read_only_fields = ('id', 'status', 'start_time', 'end_time', 'progress', 'course')
+        fields = ['id', 'status', 'start_time', 'end_time', 'progress', 'rate_progress', 'course']
+        read_only_fields = ('id', 'status', 'start_time', 'end_time', 'progress', 'rate_progress', 'course')
         ordering = ['created']
         # expandable_fields = {'course': (
         #     CoursewareSerializer, {'source': 'course', 'read_only': True})}
+
+    def get_rate_progress(self, learnprogress):
+        property = learnprogress.course.property
+
+        if learnprogress.course.file_type == 'PDF':
+            numpage = learnprogress.progress['numpage']
+            return round(100*numpage/property['numpages'])
+
+        if learnprogress.course.file_type == 'MP4':
+            starttime = learnprogress.progress.get('starttime', 0)
+            return round(100*starttime/property['duration'])

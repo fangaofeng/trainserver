@@ -38,3 +38,15 @@ class ADDDELSerializer(serializers.ModelSerializer):
             instance.save()
 
         return instance
+
+
+class CurrentUserDepartmentDefault:
+    def set_context(self, serializer_field):
+
+        self.department = getattr(serializer_field.context['request'].user, 'managerdepartment', None)
+
+    def __call__(self):
+        return self.department
+
+    def __repr__(self):
+        return '%s()' % self.__class__.__name__

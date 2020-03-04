@@ -12,7 +12,7 @@ from django.db.models.query import QuerySet
 # from django.db.models.signals import post_save, m2m_changed
 from django.utils import timezone
 from django.utils.six import text_type
-# from jsonfield.fields import JSONField
+
 from model_utils import Choices
 from notifications import settings as notifications_settings
 from notifications.utils import id2slug
@@ -94,7 +94,11 @@ class NotificationTask(CreaterTimeStampedModel):
         related_name='+'
 
     )
-
+    STATUS_CHOICES = (
+        ('d', '草稿'),
+        ('p', '发送'),
+    )
+    status = models.CharField('发送状态', max_length=1, choices=STATUS_CHOICES, default='p')
     public = models.BooleanField(default=True, db_index=True)
     actor_content_type = models.ForeignKey(ContentType, related_name='notify_actor', on_delete=models.CASCADE)
     actor_object_id = models.CharField(max_length=255)

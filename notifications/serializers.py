@@ -11,7 +11,6 @@ from rest_framework import serializers  # , exceptions
 from common.selffield import ChoiceField
 from orgs.serializers import DepartmentSerializer
 from traingroup.models import TrainGroup
-
 from .models import Notification, NotificationTask
 
 UserModel = get_user_model()
@@ -45,14 +44,15 @@ class NotificationTaskSerializer(FlexFieldsModelSerializer):
     actor = GenericNotificationRelatedField(read_only=True)
     action = GenericNotificationRelatedField(read_only=True)
     target = GenericNotificationRelatedField(read_only=True)
+    status = ChoiceField(choices=NotificationTask.STATUS_CHOICES, required=False)
 
     class Meta:
         model = NotificationTask
         fields = ('id', 'level', 'reason', 'actor',
                   'verb', 'description', 'target',
-                  'action', 'public',
-                  'data', 'users', 'departments', 'groups', )
-        read_only_fields = ('id', 'actor', 'target', 'action', )
+                  'action', 'public', 'status',
+                  'data', 'users', 'departments', 'groups', 'created')
+        read_only_fields = ('id', 'actor', 'target', 'action', 'created')
         ordering = ['created']
 
 
@@ -61,13 +61,14 @@ class NotificationListTaskSerializer(FlexFieldsModelSerializer):
     actor = GenericNotificationRelatedField(read_only=True)
     action = GenericNotificationRelatedField(read_only=True)
     target = GenericNotificationRelatedField(read_only=True)
+    status = ChoiceField(choices=NotificationTask.STATUS_CHOICES, required=False)
 
     class Meta:
         model = NotificationTask
         fields = ('id', 'level', 'reason', 'actor',
                   'verb', 'description', 'target',
                   'action', 'public',
-                  'data', )
+                  'data', 'status')
         read_only_fields = ('id', 'actor', 'target', 'action', )
         ordering = ['created']
 
@@ -77,13 +78,14 @@ class NotificationTaskCreateSerializer(serializers.ModelSerializer):
     # actor = GenericNotificationRelatedField(read_only=True)
     action = GenericNotificationRelatedField(read_only=True)
     target = GenericNotificationRelatedField(read_only=True)
+    status = ChoiceField(choices=NotificationTask.STATUS_CHOICES, required=False)
 
     class Meta:
         model = NotificationTask
         fields = ('id', 'level',  'reason', 'actor',
                   'verb', 'description', 'target',
                   'action', 'public',
-                  'data', 'users', 'departments', 'groups')
+                  'data', 'users', 'departments', 'groups', 'status')
         read_only_fields = ('id', 'actor', 'target', 'action', )
         ordering = ['created']
         extra_kwargs = {

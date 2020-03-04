@@ -75,29 +75,19 @@ class LearnPlanViewSet(CreateRetrieveListUpdateViewSet):
         else:
             return LearnPlanSerializer
 
+    @action(methods=['get'], detail=True, serializer_class=TrainGroupLearnPlanSerializer)
+    def groups(self, request, pk=None):
 
-class LearnPlanViewGroupSet(generics.ListAPIView):
-    """
-    This view automatically provides `list`  actions for group fo learnplan.
-    """
-    renderer_classes = (EmberJSONRenderer,)
-    # queryset = LearnPlan.objects.all()
-    serializer_class = TrainGroupLearnPlanSerializer
-    pagination_class = ListPagination
-    permission_classes = [RolePermission]
-    roles_filterbackends = [IsManagerFilterBackend]
-    filter_backends = [RoleFilterBackend, filters.backends.RestFrameworkFilterBackend]
+        instance = self.get_object()
+        queryset = instance.traingroups.all()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
 
-    def get_queryset(self):
-        learnplanid = self.kwargs.get('learnplanid')
+        serializer = self.get_serializer(queryset, many=True)
 
-        # LearnPlan.objects.filter(id=learnplanid)
-        #    if learnplan.creater.id != user.id:
-        #         raise Http404('you not allow to query this group of learnplan.')
-        #     return learnplan.traingroups.all()
-
-        # except learnplan.DoesNotExist as e:
-        #     return []
+        return Response(serializer.data)
 
 
 class LearnProgressViewGroupMemberSet(generics.ListAPIView):
@@ -156,22 +146,13 @@ class LearnProgressViewSet(RetrieveListUpdateViewSet):
     filterset_class = progressFilter
     roles_filterbackends = [IsManagerProgressFilterBackend, IsOwnerFilterBackend]
 
-    # filter_backends = (DjangoFilterBackend,)
-    # def get_object(self):
-
-    #     learnprogress = super(LearnProgressViewSet, self).get_object()
-    #     return learnprogress
 
     def get_serializer_class(self):
         if self.action == 'retrieve' or self.action == 'list':
             return LearnProgressReadOnlySerializer
         return super().get_serializer_class()
 
-    # def get_queryset(self):
 
-    #     user = self.request.user
-    #     queryset = LearnProgress.objects.filter(trainer=user).order_by('-create_time')
-    #     return queryset
 
     def retrieve(self, request, *args, **kwargs):
         user = self.request.user
@@ -269,8 +250,8 @@ class LearnProgressViewAggregationSet(generics.RetrieveAPIView):
         learnoverdue = queryset.filter(
             status='overdueNotCompleted').order_by('-create_time')[0:4]
         data = {
-            'learncompletedes': learncompletedes,
-            'learntodoes': learntodoes,
-            'learnoverdue': learnoverdue
+            'completed': learncompletedes,
+            'todo': learntodoes,
+            'overdue': learnoverdue
         }
         return data

@@ -62,19 +62,6 @@ class ExamPlanViewSet(viewsets.ModelViewSet):
     filterset_class = ExamPlanFilter
     roles_filterbackends = [IsManagerFilterBackend]
 
-    # def get_queryset(self):
-    #     """
-    #     This view should return a list of all the purchases
-    #     for the currently authenticated user.
-    #     """
-    #     user = self.request.user
-    #     return ExamPlan.objects.filter(creater=user)
-    # def get_serializer_class(self):
-    #     if self.request.method == 'POST':
-    #         return ExamPlanSerializer
-    #     else:
-    #         return ExamPlanSerializer
-
     def get_serializer(self, *args, **kwargs):
         if self.action == 'retrieve':
             kwargs.update(expand='exampaper')
@@ -84,29 +71,20 @@ class ExamPlanViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             return [RoleFilterBackend, filters.backends.RestFrameworkFilterBackend]
         return super().get_filter_backends()
-    # def create(self, request, *args, **kwargs):
-    #     super(ExamPlanViewSet, self).create(request, *args, **kwargs)
 
+    @action(methods=['get'], detail=True, serializer_class=TrainGroupExamPlanSerializer)
+    def groups(self, request, pk=None):
 
-class ExamPlanViewGroupSet(ListViewSet):
-    """
-    This view automatically provides `list`  actions for groups fo Examplan.
-    """
-    renderer_classes = (EmberJSONRenderer,)
-    # queryset = ExamPlan.objects.all()
-    serializer_class = TrainGroupExamPlanSerializer
-    pagination_class = ListPagination
-    permission_classes = [RolePermission]
-    roles_filterbackends = [IsManagerFilterBackend]
-    filter_backends = [RoleFilterBackend, filters.backends.RestFrameworkFilterBackend]
-    # def get_filter_backends(self):
-    #     if self.request.method == 'GET':
-    #         return [RoleFilterBackend, filters.backends.RestFrameworkFilterBackend]
-    #     return super().get_filter_backends()
+        instance = self.get_object()
+        queryset = instance.traingroups.all()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
 
-    def get_queryset(self):
-        planid = self.kwargs.get('planid')
-        return TrainGroup.objects.filter(learn_plans=planid)
+        serializer = self.get_serializer(queryset, many=True)
+
+        return Response(serializer.data)
 
 
 class ExamProgressViewGroupMemberSet(ListViewSet):
@@ -174,10 +152,6 @@ class ExamProgressViewSet(RetrieveListUpdateViewSet):
             return [RoleFilterBackend, filters.backends.RestFrameworkFilterBackend]
         return super().get_filter_backends()
 
-    # def get_object(self):
-    #     Examprogress = super(ExamProgressViewSet, self).get_object()
-    #     return Examprogress
-
     def get_serializer_class(self):
         if self.action == 'partial_update':
             return ExamProgressModifySerializer
@@ -192,12 +166,6 @@ class ExamProgressViewSet(RetrieveListUpdateViewSet):
             kwargs.update(fields=['id', 'created', 'trainer', 'plan', 'status',
                                   'start_time', 'end_time', 'score', 'days_remaining'])
         return super(ExamProgressViewSet, self).get_serializer(*args, **kwargs)
-
-    # def get_queryset(self):
-
-    #     user = self.request.user
-    #     queryset = ExamProgress.objects.filter(trainer=user).order_by('-created')
-    #     return queryset
 
     def retrieve(self, request, *args, **kwargs):
         user = self.request.user
@@ -246,6 +214,20 @@ class ExamProgressViewSet(RetrieveListUpdateViewSet):
 
         return Response(serializer.data)
 
+    @action(methods=['get'], detail=True, serializer_class=QuestionExamSerializer)
+    def questions(self, request, pk=None):
+
+        instance = self.get_object()
+        queryset = instance.plan.exampaper.questions.all()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+
+        return Response(serializer.data)
+
 
 class ExamProgressViewQuestionSet(ListViewSet):
     """
@@ -271,11 +253,11 @@ class ExamProgressViewQuestionSet(ListViewSet):
         try:
             examprogress = ExamProgress.objects.get(id=progressid)
             if examprogress.trainer.id != user.id:
-                raise Http404('you not allow to query this group of Examplan.')
+                raise Http404('you not allow to query this group of progress.')
             return examprogress.plan.exampaper.questions.all()
 
         except ExamPlan.DoesNotExist as e:
-            raise Http404('No traingroup matches the given Examplan query .')
+            raise Http404('No progressid matches the given progress query .')
         return []
 
 
@@ -305,9 +287,9 @@ class ExamProgressViewAggregationSet(generics.RetrieveAPIView):
             Q(status='completed') | Q(status='overdueCompleted')).order_by('-created')[0:4]
         examoverdue = queryset.filter(status='overdueNotCompleted').order_by('-created')[0:4]
         data = {
-            'examcompletedes': examcompletedes,
-            'examtodoes': examtodoes,
-            'examoverdue': examoverdue
+            'completed': examcompletedes,
+            'todo': examtodoes,
+            'overdue': examoverdue
         }
 
         return data

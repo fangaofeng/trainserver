@@ -58,8 +58,9 @@ class DepartmentWriteSerializer(serializers.ModelSerializer):
         parent = validated_data.pop('parent', None)
         if name:
             instance.name = name
+
         if trainmanager:
-            instance.trainmanager = trainmanager
+            instance.changeTrainmanager(trainmanager)
         if parent:
             instance.move_to(parent)
         instance.clean()

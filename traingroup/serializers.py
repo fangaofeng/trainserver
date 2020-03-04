@@ -8,18 +8,19 @@ from .models import TrainGroup
 from django.contrib.auth import get_user_model
 from users.serializers import UserDetailsSerializer
 from rest_framework.utils import model_meta
-from rest_framework.serializers import raise_errors_on_nested_writes
+from rest_framework.serializers import raise_errors_on_nested_writes, CreateOnlyDefault
+from common.serializers import CurrentUserDepartmentDefault
 
 
 class TrainGroupSerializer(serializers.ModelSerializer):
-    administrator = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
+    department = serializers.HiddenField(
+        default=CurrentUserDepartmentDefault()
     )
     count = serializers.SerializerMethodField()
 
     class Meta:
         model = TrainGroup
-        fields = ('id', 'created_time', 'trainers', 'group_no', 'administrator', 'name', 'count')
+        fields = ('id', 'created_time', 'trainers', 'group_no', 'department', 'name', 'count')
         read_only_fields = ('created_time', 'group_no', 'id', 'count')
         extra_kwargs = {'trainers': {'write_only': True}}
         ordering = ['created_time']
@@ -31,8 +32,8 @@ class TrainGroupSerializer(serializers.ModelSerializer):
         return attrs
 
     def generateGroupNo(self, validated_data, instance):
-        administrator = validated_data['administrator']
-        return ''.join([administrator.user_no, str(instance.id).zfill(6)])
+        department = validated_data['department']
+        return ''.join([str(department), str(instance.id).zfill(6)])
 
     def create(self, validated_data):
         #validated_data['administrator'] = self.initial_data['administrator']
@@ -70,7 +71,7 @@ class TrainGroupLearnPlanSerializer(serializers.ModelSerializer):
 
 
 class TrainGroupExamPlanSerializer(serializers.ModelSerializer):
-    #plan_no = serializers.IntegerField(required=True,write_only=True)
+
     count = serializers.SerializerMethodField()
     examplanration = serializers.SerializerMethodField()
 

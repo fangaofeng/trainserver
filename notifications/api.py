@@ -43,7 +43,7 @@ class NotificationTaskViewSet(CreateRetrieveListViewSet):
             kwargs.update(fields=['id', 'level', 'reason', 'actor',
                                   'verb', 'description', 'target',
                                   'action', 'public',
-                                  'data'])
+                                  'data', 'created', 'status'])
         # if getattr(self, 'swagger_fake_view', False):  # 抑制swagger错误
 
         #     return NotificationTaskSerializer

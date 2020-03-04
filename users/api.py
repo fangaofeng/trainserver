@@ -371,7 +371,7 @@ class UserView(RoleFilterMixViewSet, ModelViewSet):
     pagination_class = ListPagination
     queryset = get_user_model().objects.exclude(is_staff=True).exclude(is_superuser=True)
     filter_backends = [RoleFilterBackend, DjangoFilterBackend]
-    filterset_fields = ['importid', 'roles']
+    filterset_fields = ['importid', 'roles', 'department', 'name']
 
     def get_serializer_class(self):
         if self.action == 'bulkdelete':

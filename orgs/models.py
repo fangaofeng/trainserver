@@ -5,10 +5,11 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ObjectDoesNotExist
 # Department.getobject_slug('江苏万海龙/研发中心/测试部/交付团队')
 from django.contrib.auth import get_user_model
+from permissions.models import Role
 
 
 class DepartmentManager(TreeManager):
-    def get_departmentbyUser(self, user):
+    def get_departmentbyTrainmanager(self, user):
         try:
             return self.filter(trainmanager=user)
         except Exception as e:
@@ -56,6 +57,14 @@ class Department(MPTTModel):
             self.slug = '/'.join([self.parent.slug, self.name])
         else:
             self.slug = self.name
+
+    def changeTrainmanager(self, user):
+        role_trainmanager = Role.objects.get_by_natural_key('trainmanager')
+        role_stu = Role.objects.get_by_natural_key('stu')
+        if getattr(self, 'trainmanager', None):
+            self.trainmanager.roles.set([role_stu])
+        self.trainmanager = user
+        user.roles.set([role_trainmanager])
 
     class Meta:
         verbose_name = 'Department'

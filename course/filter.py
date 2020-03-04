@@ -23,4 +23,4 @@ class IsUserFilterBackend(RoleFilterBackend):
 
     def filter_queryset(self, request, queryset, view):
 
-        return queryset.filter(recommend=True)
+        return queryset.filter(category='公开课')
