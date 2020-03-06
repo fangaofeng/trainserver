@@ -14,6 +14,6 @@ class EmberJSONRenderer(JSONRenderer):
                 else:
                     data = {'status': 'ok', 'data': data}
             else:
-                data = {'status': 'error', "resonse": data}
+                data = {'status': 'error', "message": data}
 
         return super(EmberJSONRenderer, self).render(data, accepted_media_type, renderer_context)
