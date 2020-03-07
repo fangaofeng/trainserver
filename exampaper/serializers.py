@@ -175,10 +175,7 @@ class ExamPaPerSerializer(OwnerFlexFSerializer):
         ordering = ['created']
 
         expandable_fields = {
-            # 'departments': (QuestionExamSerializer, {'source': 'departments', 'many': True}),
-            'questionsdict': (SerializerMethodField,),
-            # 'singlechoices': (QuestionExamSerializer, {'source': 'questions', 'many': True}),
-            # 'judgements': (QuestionExamSerializer, {'source': 'questions',  'many': True}),
+            'questionsdict': SerializerMethodField,
             'questions': (QuestionExamSerializer, {'source': 'questions', 'many': True})
         }
 

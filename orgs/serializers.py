@@ -21,8 +21,8 @@ class DepartmentSerializer(FlexFieldsModelSerializer):
         fields = ('id', 'name', 'parent', 'slug')
         read_only_fields = ('created_time', 'slug',)
         ordering = ['created_time']
-        expandable_fields = {'trainmanager': (
-            UserDetailsSerializer, {'source': 'trainmanager', "read_only": True})}
+        expandable_fields = {'trainmanager': [
+            UserDetailsSerializer, {'source': 'trainmanager', "read_only": True}]}
 
     def to_representation(self, value):
         ret = super().to_representation(value)

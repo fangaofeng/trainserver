@@ -13,10 +13,10 @@ from common.serializers import OwnerFieldSerializer
 import pendulum
 from rest_flex_fields import FlexFieldsModelSerializer
 from django.utils import timezone
-from common.serializers import CurrentUserDepartmentDefault
+from common.serializers import CurrentUserDepartmentDefault,  OwnerFieldSerializer
 
 
-class LearnPlanSerializer(serializers.ModelSerializer):
+class LearnPlanSerializer(OwnerFieldSerializer):
     department = serializers.HiddenField(
         default=CurrentUserDepartmentDefault()
     )

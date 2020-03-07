@@ -64,7 +64,7 @@ class ExamPlanViewSet(viewsets.ModelViewSet):
 
     def get_serializer(self, *args, **kwargs):
         if self.action == 'retrieve':
-            kwargs.update(expand='exampaper')
+            kwargs.update(expand=['exampaper'])
         return super(ExamPlanViewSet, self).get_serializer(*args, **kwargs)
 
     def get_filter_backends(self):
@@ -97,7 +97,7 @@ class ExamProgressViewGroupMemberSet(ListViewSet):
     pagination_class = ListPagination
     permission_classes = [RolePermission]
     roles_filterbackends = [IsManagerProgressFilterBackend]
-    filter_backends = [RoleFilterBackend, filters.backends.RestFrameworkFilterBackend]
+    filter_backends = [RoleFilterBackend]
     # def get_filter_backends(self):
     #     if self.request.method == 'GET':
     #         return [RoleFilterBackend, filters.backends.RestFrameworkFilterBackend]
@@ -162,7 +162,7 @@ class ExamProgressViewSet(RetrieveListUpdateViewSet):
 
     def get_serializer(self, *args, **kwargs):
         if self.action == 'list' or self.action == 'retrieve':
-            kwargs.update(expand='plan')
+            kwargs.update(expand=['plan'])
             kwargs.update(fields=['id', 'created', 'trainer', 'plan', 'status',
                                   'start_time', 'end_time', 'score', 'days_remaining'])
         return super(ExamProgressViewSet, self).get_serializer(*args, **kwargs)
@@ -177,7 +177,7 @@ class ExamProgressViewSet(RetrieveListUpdateViewSet):
             if instance.status != 'completed':
                 instance.status = 'overdue'
                 instance.save()
-            return Response({'status': 'overdue', 'reason': 'exam time is passed', "NOCHANGE": True})
+            return Response({'message': 'exam time is passed'})
         elif instance.status == 'assigned':
             instance.start_time = now
             instance.status = 'examing'

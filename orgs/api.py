@@ -49,7 +49,7 @@ class OrgViewSet(viewsets.ModelViewSet):
 
     def get_serializer(self, *args, **kwargs):
         if self.action == 'retrieve' and self.request.query_params.get('trainmanager', None) == "true":
-            kwargs.update(expand='trainmanager')
+            kwargs.update(expand=['trainmanager'])
 
         return super(OrgViewSet, self).get_serializer(*args, **kwargs)
 

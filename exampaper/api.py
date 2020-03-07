@@ -58,7 +58,7 @@ class ExamPaPerViewSet(viewsets.ModelViewSet):
             #     kwargs.update(expand='questions', expandable_fields={
             #                   'questions': (serializers.SerializerMethodField,)})
             # else:
-            kwargs.update(expand='questions')
+            kwargs.update(expand=['questions'])
         return super(ExamPaPerViewSet, self).get_serializer(*args, **kwargs)
 
     def create(self, request, *args, **kwargs):

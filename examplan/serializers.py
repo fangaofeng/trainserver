@@ -29,7 +29,7 @@ class ExamPlanSerializer(OwnerFlexFSerializer):
         read_only_fields = ('id', 'created', 'creater', 'status', 'ratio')
         ordering = ['created']
         extra_kwargs = {'traingroups': {'write_only': True}, 'course': {'write_only': True}}
-        expandable_fields = {'exampaper': [ExamPaPerSerializer]}
+        expandable_fields = {'exampaper': ExamPaPerSerializer}
 
     def get_ratio(self, examplan):
         num_completed = examplan.progresses.filter(status='completed').count()
@@ -65,7 +65,7 @@ class ExamPlanReadonlySerializer(OwnerFlexFSerializer):
         read_only_fields = ('id', 'name', 'start_time', 'creater',
                             'exampaper', 'ratio', 'end_time', 'status')
         ordering = ['created']
-        expandable_fields = {'exampaper': (ExamPaPerSerializer,)}
+        expandable_fields = {'exampaper': ExamPaPerSerializer}
 
     def get_ratio(self, examplan):
         num_completed = examplan.progresses.filter(status='completed').count()
@@ -94,7 +94,7 @@ class ExamProgressSerializer(OwnerFlexFSerializer):
                   'start_time', 'end_time', 'score', 'answers', 'days_remaining']
         read_only_fields = ('id', 'created', 'trainer', 'plan', 'score',  'days_remaining')
         ordering = ['created']
-        expandable_fields = {'plan': [ExamPlanReadonlySerializer]}
+        expandable_fields = {'plan': ExamPlanReadonlySerializer}
 
     def get_days_remaining(self, examprogress):
         today = pendulum.today().date()

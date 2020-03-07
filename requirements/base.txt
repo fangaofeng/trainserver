@@ -13,7 +13,7 @@ django-simple-history==2.8.0
 djangorestframework==3.10.3 # djangorestframework 使用自行修改过的,安装依赖-----------------------------------------------------------------
 djangorestframework_filters==1.0.0.dev0
 djangorestframework_recursive==0.1.2
-drf_flex_fields==0.6.1
+drf_flex_fields==0.7.5
 django-import-export
 django-cacheops
 django-admin-timeline
