@@ -1,7 +1,9 @@
 {
-  "python.venvPath": "E:\\pythonenv",
-  "python.venvFolders": ["whlrest-PFVxFgBL"],
-  "python.pythonPath": "E:\\pythonvenv\\whlrest-PFVxFgBL\\Scripts\\python.exe",
+  "python.venvPath": "/home/fgf",
+  "python.venvFolders": [
+    "whlenv"
+  ],
+  "python.pythonPath": "/home/fgf/whlenv/bin/python",
   //"python.pipenvPath": "E:\\pythonvenv\\trainserver-PFVxFgBL\\Scripts\\pipenv.exe",
   //"python.pipenvPath": "C:\\Python\\Python37\\Scripts\\pipenv.exe",
   "python.terminal.activateEnvironment": true,
@@ -25,7 +27,7 @@
   //"svn.path": "c:\\Program Files\\TortoiseSVN\\bin",
   "git.ignoreLimitWarning": true,
   "python.autoComplete.extraPaths": [
-    "E:\\pythonvenv\\whlrest-PFVxFgBL\\Lib\\site-packages"
+    "/home/fgf/whlenv/Lib/site-packages"
   ],
   "python.linting.pylintEnabled": false,
   "python.linting.maxNumberOfProblems": 120,
@@ -38,8 +40,5 @@
   },
   "emmet.includeLanguages": {
     "django-html": "html"
-  },
-  "python.analysis.extraPaths": [
-    "E:\\pythonvenv\\whlrest-PFVxFgBL\\Lib\\site-packages"
-  ]
+  }
 }

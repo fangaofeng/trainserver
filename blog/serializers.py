@@ -17,3 +17,14 @@ class ArticleSerializer(OwnerFieldSerializer):
         read_only_fields = ('id', 'modified', 'created', 'views', 'creater', 'thumbnail')
         ordering = ['pub_time', 'modified']
         extra_kwargs = {'description': {'required': False}}
+
+class ArticleListSerializer(serializers.Serializer):
+
+    articles = serializers.PrimaryKeyRelatedField(required=True, many=True, queryset=Article.objects.all())
+
+    class Meta:
+        fields = ['articles']
+
+    def deletearticles(self):
+        for article in self.validated_data['articles']:
+            article.delete()

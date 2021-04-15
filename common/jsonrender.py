@@ -1,5 +1,7 @@
 from rest_framework.renderers import JSONRenderer
 from collections import OrderedDict
+from rest_framework.views import exception_handler
+from rest_framework.exceptions import APIException
 
 
 class EmberJSONRenderer(JSONRenderer):
@@ -14,6 +16,6 @@ class EmberJSONRenderer(JSONRenderer):
                 else:
                     data = {'status': 'ok', 'data': data}
             else:
-                data = {'status': 'error', "message": data}
+                data.update(status='error')
 
         return super(EmberJSONRenderer, self).render(data, accepted_media_type, renderer_context)

@@ -27,3 +27,17 @@ class ArticleViewSet(viewsets.ModelViewSet):
         instance = super(ArticleViewSet, self).get_object()
         instance.viewed()
         return instance
+
+    def get_serializer_class(self):
+        if self.action == 'bulkdel':
+            return ArticleListSerializer
+        return ArticleSerializer
+
+    @action(detail=False, methods=['PATCH'], name='bulk delete articles')
+    def bulkdel(self, request, *args, **kwargs):
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.deletearticles()
+
+        return Response({})

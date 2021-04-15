@@ -373,6 +373,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication'
     ),
+    'EXCEPTION_HANDLER': 'common.view.exception_handler',
     'UPLOADED_FILES_USE_URL': True,
     'DATE_FORMAT': '%Y-%m-%d',
 

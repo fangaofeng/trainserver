@@ -99,7 +99,7 @@ class NotificationTask(CreaterTimeStampedModel):
         ('p', '发送'),
     )
     status = models.CharField('发送状态', max_length=1, choices=STATUS_CHOICES, default='p')
-    public = models.BooleanField(default=True, db_index=True)
+    public = models.BooleanField(default=False, db_index=True)
     actor_content_type = models.ForeignKey(ContentType, related_name='notify_actor', on_delete=models.CASCADE)
     actor_object_id = models.CharField(max_length=255)
     actor = GenericForeignKey('actor_content_type', 'actor_object_id')
