@@ -30,7 +30,7 @@ django_json_widget==0.2.0
 argon2-cffi==19.2.0
 
 moviepy==1.0.0  # 依赖 装在比较慢 imageio-ffmpeg
-Pillow==5.3.0
+Pillow==8.3.2
 requests==2.21.0
 Markdown==3.0.1
 Pygments==2.3.1
