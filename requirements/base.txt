@@ -1,7 +1,7 @@
 django==2.2.10  # pyup: < 3.0  # https://www.djangoproject.com/
 django-environ==0.4.5  # https://github.com/joke2k/django-environ
 django-colorfield==0.1.15
-django-filter==2.2.0
+django-filter==2.4.0
 django-imagekit==4.0.2
 django-json-widget==0.2.0
 django-jsoneditor==0.1.4
