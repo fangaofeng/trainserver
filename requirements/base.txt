@@ -31,7 +31,7 @@ argon2-cffi==19.2.0
 
 moviepy==1.0.0  # 依赖 装在比较慢 imageio-ffmpeg
 Pillow==9.3.0
-requests==2.21.0
+requests==2.31.0
 Markdown==3.0.1
 Pygments==2.7.4
 psycopg2-binary==2.8.4
